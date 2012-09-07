@@ -6,4 +6,5 @@
 
 	$ cd devchan
 	$ npm install
+	$ node seeds
 	$ node server

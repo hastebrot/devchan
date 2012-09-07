@@ -1,0 +1,8 @@
+- &board1
+  name: "prog"
+- &board2
+  name: "foo"
+- &board3
+  name: "bar"
+- &board4
+  name: "baz"
