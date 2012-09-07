@@ -15,29 +15,32 @@ module.exports = global.Devchan = Devchan = {}
 // DEVCHAN PATHS.
 //-----------------------------------------------------------------------------
 
+Devchan.rootPath = path.join(__dirname, "..")
+
 Devchan.paths = {
-  root: path.join(__dirname, ".."),
-  public: path.join(__dirname, "../public"),
-  views: path.join(__dirname, "../app/views")
+  public: Devchan.rootPath + "/public",
+  views: Devchan.rootPath + "/app/views"
 }
 
 //-----------------------------------------------------------------------------
 // DEVCHAN EXPRESS APP.
 //-----------------------------------------------------------------------------
 
-Devchan.app = require("./config/application")
+Devchan.app = require(Devchan.rootPath + "/app/config/application.js")
 
 //-----------------------------------------------------------------------------
 // DEVCHAN MONGOOSE DB.
 //-----------------------------------------------------------------------------
 
-Devchan.db = require("./config/database")
+Devchan.db = require(Devchan.rootPath + "/app/config/database.js")
+Devchan.db.models = require(Devchan.rootPath + "/app/models/index.js")
+  .models(Devchan.db)
 
 //-----------------------------------------------------------------------------
 // DEVCHAN ROUTES.
 //-----------------------------------------------------------------------------
 
-require("./routes")
+require(Devchan.rootPath + "/app/routes/index.js")
 
 //-----------------------------------------------------------------------------
 // DEVCHAN RUN.

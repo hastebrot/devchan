@@ -10,11 +10,8 @@ var mongoose = require("mongoose")
 
 var db = {}
 
-db.config = require(Devchan.paths.root + "/app/config/database.json")
+db.config = require(Devchan.rootPath + "/app/config/database.json")
 db.handler = mongoose.createConnection()
-
-db.schemas = require(Devchan.paths.root + "/app/models")
-db.models = db.schemas.register(db)
 
 db.connect = function(callback) {
   db.handler.open(db.config.host, db.config.database, db.config.port,
