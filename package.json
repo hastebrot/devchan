@@ -1,0 +1,18 @@
+{
+  "name": "devchan",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node server"
+  },
+  "dependencies": {
+    "express": "3.0.0rc2",
+    "mongoose": "3.0.3",
+    "jade": "0.27.2",
+    "underscore": "1.3.3",
+    "js-yaml": "1.0.2",
+    "marked": "0.2.5",
+    "charlatan": "0.1.0",
+    "shortid": "1.0.8"
+  }
+}

@@ -1,0 +1,138 @@
+extends layout
+
+block content
+
+  // ------------------------------------
+  // TOP ELEMENT.
+  // ------------------------------------
+  div#top-element.navbar.navbar-fixed-top
+    div.navbar-inner
+      div.container-fluid
+        a#brand.brand(href="#") #{title}
+        ul.nav(data-bind="foreach: boards")
+          li(data-bind="css: {active: $data == $parent.currentBoard()}")
+            a(href="#", data-bind="attr: {href: href()}")
+              span(data-bind="textws: 'Brett /' + name()")
+        form.navbar-form.pull-right
+          div.btn-group
+            button.btn.btn-warning(type="button", data-bind="click: refreshBoard") 
+              i.icon-refresh.icon-white
+              span(data-bind="text: ' Aktualisieren'")
+            button.btn.btn-info(type="button", data-toggle="button", 
+                data-bind="click: showForm") 
+              i.icon-edit.icon-white
+              span(data-bind="text: ' Kommentieren'")
+
+  // ------------------------------------
+  // CONTENT ELEMENT.
+  // ------------------------------------
+  div#content-element.container-fluid
+    div.row-fluid
+
+      // ------------------------------------
+      // FORM ELEMENT.
+      // ------------------------------------
+      div#form-element.span12.well.hide
+        form.form-horizontal(data-bind="with: activePost")
+          div.form-header
+            legend.clearfix Neuen Faden eröffnen
+              div.pull-right.btn-toolbar(style="margin-top: 0")
+                div.btn-group
+                  button.btn.btn-primary(type="button", 
+                    data-bind="click: function() { return $parent.createThread($data) }") Faden eröffnen
+                div.btn-group(data-toggle="buttons-radio")
+                  button.btn.active(type="button") Stoß
+                  button.btn(type="button") Säge
+          div.form-body
+            div.control-group
+              label.control-label(for="form-subject") Betreff
+              div.controls
+                input.span9#form-subject(type="text", data-bind="value: subject",
+                  placeholder="Betreff angeben...")
+            div.control-group
+              label.control-label Name
+              div.controls
+                input.span9#form-name(type="text", data-bind="value: name", placeholder="Anonymous")
+            div.control-group
+              label.control-label(for="form-comment") Kommentar
+                br
+                a(data-bind="click: $parent.showMore", href="#") (mehr)
+              div.controls.tabbable.tabs-below
+                div.tab-content
+                  textarea.syntax-github.span12#form-comment(rows="10", data-bind="value: commentPlain", 
+                    placeholder="Kommentar eingeben...",
+                    style="border-bottom-left-radius: 0; border-bottom-right-radius: 0;")
+                  //div#form-comment-codemirror(data-bind="value: comment")
+                ul.nav.nav-tabs(style="margin: 0; border-top: none")
+                  li.active
+                    a(href="#")
+                      i.icon-pencil(style="background-image: url('vendor/bootstrap-2.1.0/img/glyphicons-halflings.png');")
+                      span(data-bind="textws: 'Editor'")
+                  li
+                    a(href="#")
+                      i.icon-eye-open
+                      span(data-bind="textws: 'Vorschau'")
+            //- div.control-group
+            //-   label.control-label(for="form-attachment") Datei
+            //-   div.controls
+            //-     //input.span10#form-attachment(type="file")
+            //-     div.input-append
+            //-       span.span6.uneditable-input#form-attachment(type="text")
+            //-       button.btn(type="button") Datei auswählen...
+            
+            //- div.control-group
+            //-   label.control-label(for="form-password") Kennwort
+            //-   div.controls
+            //-     input.span5#form-password(type="password")
+
+    div.row-fluid
+
+      // ------------------------------------
+      // BOARD ELEMENT.
+      // ------------------------------------
+      div#board-element.span12.board
+        // BOARD-HEADER.
+        div.well.board-header
+          legend.clearfix
+            span(data-bind="textws: 'Brett /' + currentBoard().name()")
+            div.pagination.pull-right(data-bind="ifnot: $root.currentThread()")
+              ul(data-bind="foreach: boardPages")
+                li(data-bind="css: {active: $data == $parent.currentPage()}")
+                  a(href="#", data-bind="attr: {href: $parent.currentBoard().href() + '/page-' + $data}, text: $data")
+        // BOARD-BODY.
+        div(data-bind="foreach: threads")
+          div.well.board-body
+          
+            // THREAD.
+            div.thread(data-bind="foreach: posts")
+              // POST.
+              div.well.post(data-bind="css: {'post-head': $index() == 0, 'post-tail': $index() > 0}")
+                // POST-HEADER.
+                legend.post-header.clearfix
+                  div.pull-left(style="padding-right: 5px")
+                    button.btn.btn-mini(type="button2", 
+                      data-bind="text: 'Pfosten #' + index()")
+                  div.pull-left
+                    span(data-bind="textws: subject()")
+                    small
+                      span(data-bind="textws: name()")
+                      a(href="#", data-bind="attr: {href: $parent.href() + hrefPart($index() == 0)}, text: $root.formatDate(timestamp())")
+                      span(style="color: #d14", data-bind="if: sage(), textws: 'SÄGE!'")
+                // POST-BODY.
+                div.post-body.clearfix
+                  // POST-ATTACHMENTS.
+                  div.pull-left(data-bind="if: ko.toJSON(attachments()) != '[]'")
+                    ul.thumbnails(data-bind="foreach: attachments")
+                      li: a.thumbnail(href="#")
+                        img(data-bind="attr: {src: 'images/' + filename()}", width="200")
+                        div.caption 
+                          p.filename(data-bind="text: filename")
+                          p.metadata(data-bind="text: filetype() + ', ' + imagesize() + ', ' + filesize()")
+                  // POST-COMMENT.
+                  div.comment(data-bind="html: commentHtml")
+                  // POST-MORE.
+                  div(data-bind="if: $index() == 0")
+                    div.post-more
+                      p(style="color: gray")
+                        span(data-bind="textws: $parent.countPosts()")
+                        span Pfosten nicht angezeigt.
