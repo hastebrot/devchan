@@ -4,7 +4,7 @@
 
 ## Installation
 
-	$ cd devchan
-	$ npm install
-	$ node seeds
-	$ node server
+    $ cd devchan
+    $ npm install
+    $ node seeds
+    $ node server

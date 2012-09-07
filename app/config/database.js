@@ -21,6 +21,13 @@ db.connect = function(callback) {
     {user: db.config.user, pass: db.config.pass}, callback)
 }
 
+mongoose.Query.prototype.dump = function() {
+  this.exec(function(err, docOrDocs) {
+    if (err) throw err
+    console.log(docOrDocs)
+  })
+}
+
 //-----------------------------------------------------------------------------
 // MODULE EXPORTS.
 //-----------------------------------------------------------------------------

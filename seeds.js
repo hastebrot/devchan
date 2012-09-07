@@ -19,11 +19,11 @@ console.log("models:", _.keys(Devchan.db.models))
 console.log("fixtures:", fixtures)
 
 Devchan.db.connect(function(err) {
-	if (err) throw err
+  if (err) throw err
 
-	var boards = require("./data/fixture/boards-static.yml")
-	_.each(boards, function(board) {
-		console.log(board)
-		models.Board(board).save()
-	})
+  var boards = require("./data/fixture/boards-static.yml")
+  _.each(boards, function(board) {
+    console.log(board)
+    models.Board(board).save()
+  })
 })
