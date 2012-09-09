@@ -19,14 +19,12 @@ var inspectArgs = function(args) {
   return message
 }
 
-exports.start = function(prompt, app, db) {
+exports.start = function(prompt, variables) {
   var context = repl.start(prompt).context
 
   context.reload = function() {
-    context["app"] = app
-    context["db"] = db
-    for (var modelName in db.models) {
-      context[modelName] = db.models[modelName]
+    for (var variable in variables) {
+      context[variable] = variables[variable]
     }
   }
   

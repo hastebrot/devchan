@@ -2,4 +2,6 @@
 // RUN SERVER.
 //-----------------------------------------------------------------------------
 
-require("./app/index").run()
+if (module === require.main) {
+  require("./app/index").run()
+}
