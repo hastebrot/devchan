@@ -1,19 +1,21 @@
-//-----------------------------------------------------------------------------
+//-------------------------------------
 // MODULE DEPENDENCIES.
-//-----------------------------------------------------------------------------
+//-------------------------------------
 
 var mongoose = require("mongoose")
-var schemas = require(Devchan.rootPath + "/app/models/schemas.js")
 
-//-----------------------------------------------------------------------------
+//-------------------------------------
 // REGISTER MODELS.
-//-----------------------------------------------------------------------------
+//-------------------------------------
 
-exports.models = function(db) {
-  var models = {}
+module.exports = function(Devchan) {
+  var exports = {}
 
-  models.Board = db.handler.model("Board", schemas.boardSchema)
-  models.Thread = db.handler.model("Thread", schemas.threadSchema)
+  var schemas = require(Devchan.rootPath + "/app/models/schemas.js")
 
-  return models
+  exports.models = {}
+  exports.models.Board = Devchan.db.handler.model("Board", schemas.boardSchema)
+  exports.models.Thread = Devchan.db.handler.model("Thread", schemas.threadSchema)
+
+  return exports
 }
