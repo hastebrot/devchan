@@ -1,8 +1,12 @@
 - &board1
   name: "prog"
+  description: "prog"
 - &board2
   name: "foo"
+  description: "foo"
 - &board3
   name: "bar"
+  description: "bar"
 - &board4
   name: "baz"
+  description: "baz"
