@@ -2,16 +2,17 @@
 var getBoards = function() {
   var query = {}
   var data = helpers.jsonRequest("get", "/boards", query).data
+  console.log(data)
   var boards = _.collect(data.docs, function(doc) {
     return new models.Board(doc)
   })
   return boards
 }
 
-var getThreads = function(query) {
-  query = query || {}
-  //var data = helpers.jsonRequest("get", "/threads-generated.json", query).data
-  var data = helpers.jsonRequest("get", "/threads", query).data
+var getThreads = function(boardName, pageIndex) {
+  var url = "/boards/" + boardName + "/threads"
+  var query = {pageIndex: pageIndex}
+  var data = helpers.jsonRequest("get", url, query).data
   var threads = _.collect(data.docs, function(doc) {
     return new models.Thread(doc, {
       lastTimestamp: helpers.koMappingObject(Date),
@@ -24,10 +25,10 @@ var getThreads = function(query) {
   return threads
 }
 
-var getThread = function(query) {
-  query = query || {}
-  var data = helpers.jsonRequest("get", "/thread", query).data
-  console.log(data.doc)
+var getThread = function(boardName, threadIndex) {
+  var url = "/boards/" + boardName + "/threads/" + threadIndex
+  var query = {}
+  var data = helpers.jsonRequest("get", url, query).data
   var thread = new models.Thread(data.doc, {
     lastTimestamp: helpers.koMappingObject(Date),
     posts: helpers.koMappingModel(models.Post, {
@@ -38,15 +39,17 @@ var getThread = function(query) {
   return thread
 }
 
-var postThread = function(board, post) {
-  var query = {board: board, post: post}
-  var response = helpers.jsonRequest("post", "/threads", query)
+var postThread = function(boardName, post) {
+  var url = "/boards/" + boardName + "/threads"
+  var query = {post: post}
+  var response = helpers.jsonRequest("post", url, query)
   return response
 }
 
-var postPost = function(board, thread, post) {
-  var query = {board: board, thread: thread, post: post}
-  var response = helpers.jsonRequest("post", "/posts", query)
+var postThreadPost = function(boardName, threadIndex, post) {
+  var url = "/boards/" + boardName + "/threads/" + threadIndex
+  var query = {post: post}
+  var response = helpers.jsonRequest("post", url, query)
   return response
 }
 
@@ -105,10 +108,7 @@ var viewModel = {
     viewModel.boards(boards)
     viewModel.currentBoard(currentBoard)
 
-    var threads = getThreads({
-      boardName: params.board,
-      pageIndex: params.page
-    })
+    var threads = getThreads(params.board, params.page)
     viewModel.threads(threads)
     viewModel.currentPage(params.page)
 
@@ -117,10 +117,7 @@ var viewModel = {
 
     viewModel.currentThread(null)
     if (params.thread) {
-      var currentThread = getThread({
-        boardName: params.board,
-        threadIndex: params.thread
-      })
+      var currentThread = getThread(params.board, params.thread)
       viewModel.currentThread(currentThread)
       viewModel.threads([currentThread])
     }
@@ -130,11 +127,10 @@ var viewModel = {
     post.timestamp = JSON.stringify(post.timestamp()).slice(1, -1)
     post = ko.toJS(post)
     if (!viewModel.currentThread()) {
-      postThread(viewModel.currentBoard(), post)
+      postThread(viewModel.currentBoard().name(), post)
     }
     else {
-      console.log("postPost")
-      postPost(viewModel.currentBoard(), viewModel.currentThread(), post)
+      postThreadPost(viewModel.currentBoard().name(), viewModel.currentThread().initialPostIndex(), post)
       console.log(post)
     }
 
@@ -142,7 +138,7 @@ var viewModel = {
     viewModel.activePost(activePost)
     viewModel.refreshBoard()
   },
-  formatDate: formatDate
+  formatDate: helpers.formatDate
 }
 
 $(window).bind("hashchange", function(event) {
@@ -151,11 +147,20 @@ $(window).bind("hashchange", function(event) {
 })
 
 $(document).ready(function() {
+  if (location.hostname === "localhost") {
+    document.title = document.title + " (localhost)"
+    $("#brand-subtitle").text("(localhost)")
+  }
+
+  $("#board-element").tooltip({
+    selector: "[rel='tooltip']"
+  })
+
   viewModel.refreshBoard()
   ko.applyBindings(viewModel)
 
   $(".post").each(function() {
-    $element = $(this).find(".post-body")
+    var $element = $(this).find(".post-body")
     if ($element.height() > 360) {
       $element.height(360).css("overflow-y", "scroll")
     }

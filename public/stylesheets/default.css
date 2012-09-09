@@ -22,6 +22,7 @@ body {
 
 #top-element {
   margin-bottom: 20px;
+  min-width: 800px;
 }
 
 #content-element {
@@ -84,7 +85,7 @@ legend .pagination {
   color: black;
 }
 .post legend .btn {
-  margin-top: -0px;
+  margin-top: -4px;
 }
 
 .board .board-header {
@@ -118,60 +119,6 @@ legend .pagination {
   margin-bottom: 15px;
 }
 
-.board .board-body .post-more {
-  background-color: white;
-  border: none;
-  box-shadow: none;
-  padding: 0;
-  margin-bottom: 0;
-}
-
-.post {
-  display: table;
-}
-
-.post div.comment {
-  display: inline;
-}
-
-.post div.comment p {
-  display: block;
-  padding: 0 8px 0 0;
-}
-
-.post div.comment pre {
-  display: inline-block;
-  background-color: inherit;
-  border: none;
-  border-radius: 0;
-  border-left: 5px solid #ddd;
-  padding: 0 8px;
-}
-
-.post div.comment blockquote {
-  display: inline-block;
-  padding: 0 8px;
-}
-
-.board .board-body .post-tail {
-  padding: 10px;
-  margin-bottom: 15px;
-  margin-left: 50px;
-}
-
-.form-horizontal .nav-tabs > li > a {
-  padding: 5px 10px;
-}
-
-
-/*.board .board-body .thread {
-  padding-bottom: 10px;
-  margin: 0 0 20px 0;
-  border-bottom: 1px solid #E3E3E3;
-  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
-  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
-}*/
 
 .board .board-body ul.thumbnails {
   margin: 0;
@@ -190,6 +137,85 @@ legend .pagination {
   margin: 0;
   font-style: italic;
 }
+
+ul.thumbnails a {
+  padding: 0 !important;
+  background-color: white;
+}
+ul.thumbnails div.caption {
+  padding: 0 2px !important;
+  background-color: #ddd;
+}
+ul.thumbnails img {
+  padding: 2px !important;
+}
+
+.board .board-body .post-more {
+  background-color: white;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  margin-bottom: 0;
+}
+
+.post.selected {
+  border: 2px dotted #D14 !important;
+}
+
+.post legend {
+  padding-bottom: 5px;
+  border-bottom: 1px solid #e3e3e3;
+}
+
+.post {
+  /*display: table;*/
+}
+.post ul.thumbnails {
+  display: block;
+}
+.post div.comment {
+  display: block;
+}
+
+.post div.comment p {
+  /*display: block;*/
+  padding: 0 8px 0 0;
+}
+
+.post div.comment pre {
+  /*display: inline-block;*/
+  background-color: inherit;
+  border: none;
+  border-radius: 0;
+  border-left: 5px solid #ddd;
+  padding: 0 10px;
+  margin-left: 10px;
+}
+
+.post div.comment blockquote {
+  /*display: inline-block;*/
+  padding: 0 8px;
+}
+
+.board .board-body .post-tail {
+  padding: 10px;
+  margin-bottom: 15px;
+  /*margin-left: 50px;*/
+}
+
+.form-horizontal .nav-tabs > li > a {
+  padding: 5px 10px;
+}
+
+
+/*.board .board-body .thread {
+  padding-bottom: 10px;
+  margin: 0 0 20px 0;
+  border-bottom: 1px solid #E3E3E3;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+}*/
 
 
 .CodeMirror {

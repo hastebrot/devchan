@@ -1,6 +1,6 @@
-var helpers = exports = {};
+var helpers = exports = {}
 
-(function(exports) {
+;(function(exports) {
 
   exports.koCopy = function(source, target, mapping) {
     var copy = ko.mapping.fromJS(ko.toJS(source || {}), mapping || {}, target || {})
@@ -37,6 +37,18 @@ var helpers = exports = {};
   exports.koCompare = function(object1, object2) {
     //return ko.toJSON(object1) === ko.toJSON(object2)
     return _.isEqual(ko.toJS(object1), ko.toJS(object2))
+  }
+
+  exports.formatDate = function(date) {
+    var fill = function(number, pattern) {
+      return (pattern + number).slice(-pattern.length)
+    }
+    var day = date.getDate(), month = date.getMonth() + 1, year = date.getYear() + 1900
+    var hour = date.getHours(), minute = date.getMinutes(), second = date.getSeconds()
+    var milliseconds = date.getMilliseconds()
+    return fill(day, "00") + "." + fill(month, "00") + "." + fill(year, "0000") + " "
+      + fill(hour, "00") + ":" + fill(minute, "00") + ":" + fill(second, "00") + "."
+      + fill(milliseconds, "000")
   }
 
   /*

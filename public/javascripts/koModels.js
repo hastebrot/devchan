@@ -1,10 +1,11 @@
-var models = exports = {};
+var models = exports = {}
 
-(function(exports) {
+;(function(exports) {
 
   exports.Board = function(data, mapping) {
     var self = this
     self.name = ko.observable("")
+    self.description = ko.observable("")
     self.href = ko.computed(function() {
       return "#/" + self.name()
     })
