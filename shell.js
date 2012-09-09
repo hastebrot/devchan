@@ -4,7 +4,7 @@
 
 var _ = require("underscore")
 var Devchan = require("./app/index")
-var terminal = require("./app/config/terminal")
+var terminal = require("./app/base/terminal")
 
 Devchan.db.connect(function(err) {
   if (err) throw err

@@ -1,5 +1,13 @@
 
+0.0.2 / 2012-09-10
+------------------
+
+ * Added; Command line tool for basic database seeding (seeds.js).
+ * Added; Interactive application shell (shell.js)
+ * Added; Test suite using Mocha (test framework) and Chai.js (assertions).
+ * Improved; Module exports handling in application base code.
+
 0.0.1 / 2012-09-07
-==================
+------------------
 
   * Initial version.

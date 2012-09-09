@@ -35,13 +35,13 @@ Devchan.paths = {
 // DEVCHAN EXPRESS APP.
 //-------------------------------------
 
-Devchan.app = require(Devchan.rootPath + "/app/config/application.js")
+Devchan.app = require(Devchan.rootPath + "/app/base/application.js")(Devchan)
 
 //-------------------------------------
 // DEVCHAN MONGOOSE DB.
 //-------------------------------------
 
-Devchan.db = require(Devchan.rootPath + "/app/config/database.js")
+Devchan.db = require(Devchan.rootPath + "/app/base/database.js")(Devchan)
 Devchan.db.models = require(Devchan.rootPath + "/app/models/index.js")(Devchan).models
 
 //-------------------------------------
