@@ -1,4 +1,9 @@
 
+0.0.3 / ????
+------------
+
+ * Fixed; Replaced helpers.jsonRequest() with SuperAgent due to a bug in JQuery $.ajax().
+
 0.0.2 / 2012-09-10
 ------------------
 

@@ -42,8 +42,8 @@ block content
                   button.btn.btn-primary(type="button", 
                     data-bind="click: function() { return $parent.createThread($data) }") Faden eröffnen
                 div.btn-group(data-toggle="buttons-radio")
-                  button.btn.active(type="button") Stoß
-                  button.btn(type="button") Säge
+                  button.btn.active(type="button", data-bind="click: function() { sage(false) }") Stoß
+                  button.btn(type="button", data-bind="click: function() { sage(true) }") Säge
           div.form-body
             div.control-group
               label.control-label(for="form-subject") Betreff
@@ -119,12 +119,10 @@ block content
                   div.pull-left
                     span(data-bind="textws: subject()")
                     small
-                      span(data-bind="textws: name() || 'Horst'")
-                      span #{" &middot; "}
+                      span(data-bind="textws: (name() || 'Horst') + ' &middot;'")
                       a(rel="tooltip", -data-title="Permalink zum Pfosten", href="#",
                         data-bind="attr: {href: $parent.href() + hrefPart($index() == 0)}, text: $root.formatDate(timestamp())")
-                      span #{" &middot; "}
-                      span(style="color: #d14", data-bind="if: sage(), textws: 'SÄGE!'")
+                      span(style="color: #d14", data-bind="textws: sage() ? '&middot; SÄGE!' : ''")
                   div.pull-left(style="padding-left: 5px")
                     button.btn.btn-mini(rel="tooltip", data-title="Pfosten zitieren", type="button", data-bind="text: '>>' + index()")
                   div.pull-left(style="padding-left: 5px")

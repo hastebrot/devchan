@@ -49,6 +49,7 @@ Devchan.db.models = require(Devchan.rootPath + "/app/models/index.js")(Devchan).
 //-------------------------------------
 
 require(Devchan.rootPath + "/app/routes/index.js")(Devchan)
+require(Devchan.rootPath + "/app/routes/services.js")(Devchan)
 
 //-------------------------------------
 // DEVCHAN RUN.

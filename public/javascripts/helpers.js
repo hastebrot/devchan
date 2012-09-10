@@ -54,8 +54,13 @@ var helpers = exports = {}
   /*
    * var params1 = {username: "vincent.vega", password: ""}
    * var response1 = jsonRequest("post", "/sitzungen", params1)
+   *
+   * BUG:
+   * > jsonRequest("post", "/services/echo", {sage: false})
+   * {data: {sage: "false"}}
    */
   exports.jsonRequest = function(actionVerb, methodUrl, params) {
+    //var requestFunction = actionVerb === "post" ? $.post : $.ajax
     var response = $.ajax({
       type: actionVerb,
       url: methodUrl,
