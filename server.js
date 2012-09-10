@@ -3,5 +3,5 @@
 //-----------------------------------------------------------------------------
 
 if (module === require.main) {
-  require("./app/index").run()
+  require("./app/index.js").run()
 }

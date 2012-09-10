@@ -169,7 +169,7 @@ describe("Routes Thread", function() {
         },
         function(callback) {
           Thread.create(thread1, callback)
-        },
+        }
       ], done)
     })
 
@@ -317,7 +317,7 @@ describe("Routes Thread", function() {
   })
 
   describe("DELETE /boards/:boardName/threads/:threadIndex/:postIndex", function() {
-    var board1 = {_id: "board-1", name: "foo"}
+    var board1 = {_id: "board-1", name: "foo", currentPostIndex: 2}
     var post1 = {_id: "post-1", index: 1, sage: true, commentPlain: "This is a *comment*."}
     var post2 = {_id: "post-2", index: 2, sage: false, commentPlain: "This is a *comment*."}
     var thread1 = {_id: "thread-1", boardName: "foo", initialPostIndex: 1, lastTimestamp: new Date(),
@@ -345,11 +345,14 @@ describe("Routes Thread", function() {
       Devchan.db.handler.db.dropDatabase(done)
     })
 
-    it("should database not contain deleted post", function(done) {
-      Thread.find({}, function(err, docs) {
-        if (err) throw err
-        expect(docs[0].posts).to.have.length(1)
-        done()
+    describe("when delete subsequent post", function() {
+      it("should database not contain deleted post", function(done) {
+        Thread.find({}, function(err, docs) {
+          if (err) throw err
+          expect(docs[0].posts).to.have.length(1)
+          expect(docs[0].posts[0]._id).to.equal(post1._id)
+          done()
+        })
       })
     })
 

@@ -166,7 +166,7 @@ module.exports = function(Devchan) {
       }
       else {
         var postToRemove = _.find(thread.posts, function(post) {
-          return post.index = postIndex
+          return post.index == postIndex
         })
         thread.posts.remove(postToRemove)
         thread.save(function(err, doc) {
