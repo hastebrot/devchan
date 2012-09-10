@@ -115,6 +115,9 @@ module.exports = function(Devchan) {
         post.timestamp = new Date()
         post.commentHtml = marked(post.commentPlain)
         thread.posts.push(post)
+        if (!post.sage) {
+          thread.lastTimestamp = post.timestamp
+        }
 
         thread.save(function(err) {
           if (err) throw err

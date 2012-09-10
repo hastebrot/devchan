@@ -78,8 +78,10 @@ describe("Routes Thread", function() {
     var board1 = {_id: "board-1", name: "foo", currentPostIndex: 0}
     var thread1 = {_id: "thread-1", boardName: "foo", initialPostIndex: 1, lastTimestamp: new Date()}
     var thread2 = {_id: "thread-2", boardName: "foo", initialPostIndex: 2, lastTimestamp: new Date()}
-    var post1 = {_id: "post-1", commentPlain: "This is a **comment**."}
+    var post1 = {_id: "post-1", sage: false, commentPlain: "This is a **comment**."}
+    var post2 = {_id: "post-2", sage: true, commentPlain: "This is a **comment**."}
     var result1 = null
+    var result2 = null
 
     before(function(done) {
       Board.create(board1, function(err, doc) {
@@ -100,8 +102,25 @@ describe("Routes Thread", function() {
         })
     })
 
+    before(function(done) {
+      request.post("localhost:3036/boards/" + board1.name + "/threads")
+        .send({post: post2})
+        .end(function(res) {
+          result2 = res
+          done()
+        })
+    })
+
     after(function(done) {
       Devchan.db.handler.db.dropDatabase(done)
+    })
+
+    it.skip("should database contain doc data", function(done) {
+      Thread.findOne({posts: {$elemMatch: post1}}, function(err, doc) {
+        if (err) throw err
+        expect(doc.posts).to.have.length(1)
+        done()
+      })
     })
 
     it("should service return status 201 (created)", function() {
@@ -121,14 +140,17 @@ describe("Routes Thread", function() {
       expect(result1.body.doc.posts[0]).to.not.have.property("_id", "post-1")
       expect(result1.body.doc.posts[0]).to.have.property("commentPlain", "This is a **comment**.")
       expect(result1.body.doc.posts[0]).to.have.property("commentHtml", "<p>This is a <strong>comment</strong>.</p>\n")
-      expect(result1.body.doc.posts[0]).to.have.property("sage", false)
     })
 
-    it.skip("should database contain doc data", function(done) {
-      Thread.findOne({posts: {$elemMatch: post1}}, function(err, doc) {
-        if (err) throw err
-        expect(doc.posts).to.have.length(1)
-        done()
+    describe("initial post without sage", function() {
+      it("should service return doc data", function() {
+        expect(result2.body.doc.posts[0]).to.have.property("sage", true)
+      })
+    })
+
+    describe("initial post with sage", function() {
+      it("should service return doc data", function() {
+        expect(result2.body.doc.posts[0]).to.have.property("sage", true)
       })
     })
   })
@@ -186,9 +208,13 @@ describe("Routes Thread", function() {
 
   describe("POST /boards/:boardName/threads/:threadIndex", function() {
     var board1 = {_id: "board-1", name: "foo"}
-    var thread1 = {_id: "thread-1", boardName: "foo", initialPostIndex: 1, lastTimestamp: new Date()}
-    var post1 = {_id: "post-1", commentPlain: "This is a *comment*."}
+    var post1 = {_id: "post-1", sage: true, commentPlain: "This is a *comment*."}
+    var post2 = {_id: "post-2", sage: false, commentPlain: "This is a *comment*."}
+    var post3 = {_id: "post-3", sage: true, commentPlain: "This is a *comment*."}
+    var thread1 = {_id: "thread-1", boardName: "foo", initialPostIndex: 1, lastTimestamp: new Date(),
+      posts: [post1]}
     var result1 = null
+    var result2 = null
 
     before(function(done) {
       Board.create(board1, function(err, doc) {
@@ -199,15 +225,33 @@ describe("Routes Thread", function() {
 
     before(function(done) {
       request.post("localhost:3036/boards/" + board1.name + "/threads/" + thread1.initialPostIndex)
-        .send({threadId: thread1._id, post: post1})
+        .send({threadId: thread1._id, post: post2})
         .end(function(res) {
           result1 = res
           done()
         })
     })
 
+    before(function(done) {
+      request.post("localhost:3036/boards/" + board1.name + "/threads/" + thread1.initialPostIndex)
+        .send({threadId: thread1._id, post: post3})
+        .end(function(res) {
+          result2 = res
+          done()
+        })
+    })
+
     after(function(done) {
       Devchan.db.handler.db.dropDatabase(done)
+    })
+
+
+    it.skip("should database contain doc data", function(done) {
+      Thread.findOne({posts: {$elemMatch: post1}}, function(err, doc) {
+        if (err) throw err
+        expect(doc.posts).to.have.length(1)
+        done()
+      })
     })
 
     it("should service return status 201 (created)", function() {
@@ -220,11 +264,18 @@ describe("Routes Thread", function() {
       expect(result1.body.ref).to.match(/\/boards\/(\w+)\/threads\/(\w+)\/(\w+)/)
     })
 
-    it.skip("should database contain doc data", function(done) {
-      Thread.findOne({posts: {$elemMatch: post1}}, function(err, doc) {
-        if (err) throw err
-        expect(doc.posts).to.have.length(1)
-        done()
+    describe("subsequent post without sage", function() {
+      it("should service return doc data", function() {
+        expect(result1.body.doc.lastTimestamp).to.equal(result1.body.doc.posts[1].timestamp)
+        expect(result1.body.doc.posts[1]).to.have.property("sage", false)
+      })
+    })
+
+    describe("subsequent post with sage", function() {
+      it("should service return doc data", function() {
+        expect(result2.body.doc.lastTimestamp).to.not.equal(result2.body.doc.posts[2].timestamp)
+        expect(result2.body.doc.posts[2]).to.have.property("sage", true)
+
       })
     })
   })
