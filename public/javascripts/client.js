@@ -57,6 +57,12 @@ var postThreadPost = function(boardName, threadIndex, post, callback) {
   request.post(url).send(query).end(callback)
 }
 
+var deleteThreadPost = function(boardName, threadIndex, postIndex, callback) {
+  var url = "/boards/" + boardName + "/threads/" + threadIndex + "/" + postIndex
+  var query = {}
+  request.del(url).send(query).end(callback)
+}
+
 var router = new helpers.Router()
 var routerCallback = function(params) {
   //console.log(JSON.stringify(params))
@@ -79,6 +85,7 @@ var viewModel = {
   currentThread: ko.observable(null),
 
   activePost: ko.observable(null),
+  boardPassword: ko.observable(""),
 
   showForm: function() {
     //$("#right-element").toggleClass("invisible")
@@ -147,6 +154,12 @@ var viewModel = {
     viewModel.activePost(activePost)
     viewModel.refreshBoard()
   },
+
+  removePost: function(thread, post) {
+    deleteThreadPost(thread.boardName(), thread.initialPostIndex(), post.index())
+    viewModel.refreshBoard()
+  },
+
   formatDate: helpers.formatDate
 }
 
