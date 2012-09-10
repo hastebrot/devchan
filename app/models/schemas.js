@@ -27,7 +27,7 @@ exports.postSchema = new mongoose.Schema({
   commentPlain: String,
   commentHtml: String,
   sage: {type: Boolean, default: false},
-  passwordEncrypted: String,
+  passwordHashed: String,
   attachments: [exports.attachmentSchema]
 })
 

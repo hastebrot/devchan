@@ -6,6 +6,7 @@
  * Added; Sage and bump functions for posts.
  * Added; Delete function for threads and posts.
  * Changed; Client-side router to use hashbang urls (`#!`).
+ * Added; Password function for posts.
 
 0.0.2 / 2012-09-10
 ------------------

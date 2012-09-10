@@ -17,7 +17,8 @@
     "js-yaml": "1.0.2",
     "charlatan": "0.1.0",
     "shortid": "1.0.8",
-    "async": "0.1.22"
+    "async": "0.1.22",
+    "password-hash": "1.2.1"
   },
   "devDependencies": {
     "mocha": "1.4.2",

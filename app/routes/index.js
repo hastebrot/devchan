@@ -7,6 +7,7 @@ var fs = require("fs")
 var _ = require("underscore")
 var yaml = require("js-yaml")
 
+var passwordHash = require("password-hash")
 var marked = require("marked")
 marked.setOptions({gfm: true, pedantic: false, sanitize: true})
 
@@ -70,10 +71,12 @@ module.exports = function(Devchan) {
         posts: []
       })
 
-      delete post._id
+      //delete post._id
       post.index = board.currentPostIndex
       post.timestamp = new Date()
       post.commentHtml = marked(post.commentPlain)
+      post.passwordHashed = post.password && post.password.length > 0 ?
+        passwordHash.generate(post.password) : ""
       thread.posts.push(post)
 
       thread.save(function(err) {
@@ -110,7 +113,7 @@ module.exports = function(Devchan) {
       if (err) throw err
 
       models.Board.allocatePostIndex({name: boardName}, function(err, board) {
-        delete post._id
+        //delete post._id
         post.index = board.currentPostIndex
         post.timestamp = new Date()
         post.commentHtml = marked(post.commentPlain)
@@ -131,32 +134,26 @@ module.exports = function(Devchan) {
   })
 
   /**
-   * request.del("/boards/foo/threads/1").end()
-   */
-  Devchan.app.del("/boards/:boardName/threads/:threadIndex", function(req, res) {
-    var boardName = req.params.boardName
-    var threadIndex = req.params.threadIndex
-
-    models.Thread.findOne({boardName: boardName, initialPostIndex: threadIndex}, function(err, thread) {
-      if (err) throw err
-
-      thread.remove(function(err) {
-        if (err) throw err
-        res.type("application/json").json(200, {})
-      })
-    })
-  })
-
-  /**
    * request.del("/boards/foo/threads/1/2").end()
    */
   Devchan.app.del("/boards/:boardName/threads/:threadIndex/:postIndex", function(req, res) {
     var boardName = req.params.boardName
     var threadIndex = req.params.threadIndex
     var postIndex = req.params.postIndex
+    var password = req.body.password
 
     models.Thread.findOne({boardName: boardName, initialPostIndex: threadIndex}, function(err, thread) {
       if (err) throw err
+
+      var postToRemove = _.find(thread.posts, function(post) {
+        return post.index == postIndex
+      })
+
+      if (postToRemove.passwordHashed && postToRemove.passwordHashed.length > 0) {
+        if(!passwordHash.verify(password, postToRemove.passwordHashed)) {
+          return res.type("application/json").json(403, {})
+        }
+      }
 
       if (threadIndex === postIndex) {
         thread.remove(function(err) {
@@ -165,9 +162,6 @@ module.exports = function(Devchan) {
         })
       }
       else {
-        var postToRemove = _.find(thread.posts, function(post) {
-          return post.index == postIndex
-        })
         thread.posts.remove(postToRemove)
         thread.save(function(err, doc) {
           if (err) throw err

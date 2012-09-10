@@ -74,8 +74,8 @@ describe("Schema Post", function() {
       expect(postSchema.paths).to.have.property("sage")
     })
 
-    it("should have field passwordEncrypted", function() {
-      expect(postSchema.paths).to.have.property("passwordEncrypted")
+    it("should have field passwordHashed", function() {
+      expect(postSchema.paths).to.have.property("passwordHashed")
     })
 
     it("should have field attachments", function() {

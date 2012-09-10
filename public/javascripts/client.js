@@ -129,12 +129,12 @@ var viewModel = {
           getThread(params.board, params.thread, function(currentThread) {
             viewModel.currentThread(currentThread)
             viewModel.threads([currentThread])
-            if (callback) callback()
+            if (typeof(callback) === "function") callback()
           })
         }
         else {
           viewModel.currentThread(null)
-          if (callback) callback()
+          if (typeof(callback) === "function") callback()
         }
       })
     })
