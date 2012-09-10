@@ -67,10 +67,10 @@ var router = new helpers.Router()
 var routerCallback = function(params) {
   //console.log(JSON.stringify(params))
 }
-router.define("#/:board", routerCallback)
-router.define("#/:board/page-:page", routerCallback)
-router.define("#/:board/thread-:thread", routerCallback)
-router.define("#/:board/thread-:thread/post-:post", routerCallback)
+router.define("#!/:board", routerCallback)
+router.define("#!/:board/page-:page", routerCallback)
+router.define("#!/:board/thread-:thread", routerCallback)
+router.define("#!/:board/thread-:thread/post-:post", routerCallback)
 // TODO: router.urlFor(path, params)
 
 var toggleMore = false
@@ -144,7 +144,10 @@ var viewModel = {
     post.timestamp = JSON.stringify(post.timestamp()).slice(1, -1)
     post = ko.toJS(post)
     if (!viewModel.currentThread()) {
-      postThread(viewModel.currentBoard().name(), post)
+      postThread(viewModel.currentBoard().name(), post, function(res) {
+        location.hash = "#!/" + res.body.doc.boardName + "/thread-"
+          + res.body.doc.initialPostIndex
+      })
     }
     else {
       postThreadPost(viewModel.currentBoard().name(), viewModel.currentThread().initialPostIndex(), post)
@@ -157,6 +160,9 @@ var viewModel = {
 
   removePost: function(thread, post) {
     deleteThreadPost(thread.boardName(), thread.initialPostIndex(), post.index())
+    if (thread.initialPostIndex() === post.index()) {
+      location.hash = "#!/" + thread.boardName()
+    }
     viewModel.refreshBoard()
   },
 

@@ -7,7 +7,7 @@ var models = exports = {}
     self.name = ko.observable("")
     self.description = ko.observable("")
     self.href = ko.computed(function() {
-      return "#/" + self.name()
+      return "#!/" + self.name()
     })
     helpers.koCopy(data, self, mapping)
   }
@@ -22,7 +22,7 @@ var models = exports = {}
       return self.posts().length
     })
     self.href = ko.computed(function() {
-      return "#/" + self.boardName() + "/thread-" + self.initialPostIndex()
+      return "#!/" + self.boardName() + "/thread-" + self.initialPostIndex()
     })
     helpers.koCopy(data, self, mapping)
   }
