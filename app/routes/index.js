@@ -25,7 +25,7 @@ module.exports = function(Devchan) {
   })
 
   /**
-   * request.get("/boards")
+   * request.get("/boards").end()
    */
   Devchan.app.get("/boards", function(req, res) {
     models.Board.find().sort("+name").exec(function(err, docs) {
@@ -34,7 +34,7 @@ module.exports = function(Devchan) {
   })
 
   /**
-   * request.get("/boards/foo/threads").send({pageIndex: 1})
+   * request.get("/boards/foo/threads").send({pageIndex: 1}).end()
    */
   Devchan.app.get("/boards/:boardName/threads", function(req, res) {
     var boardName = req.params.boardName
@@ -54,7 +54,7 @@ module.exports = function(Devchan) {
   })
 
   /**
-   * request.post("/boards/foo/threads").send({post: {})
+   * request.post("/boards/foo/threads").send({post: {}).end()
    */
   Devchan.app.post("/boards/:boardName/threads", function(req, res) {
     var boardName = req.params.boardName
@@ -87,7 +87,7 @@ module.exports = function(Devchan) {
   })
 
   /**
-   * request.get("/boards/foo/threads/1").send({})
+   * request.get("/boards/foo/threads/1").send({}).end()
    */
   Devchan.app.get("/boards/:boardName/threads/:threadIndex", function(req, res) {
     var boardName = req.params.boardName
@@ -99,7 +99,7 @@ module.exports = function(Devchan) {
   })
 
   /**
-   * request.post("/boards/foo/threads/1").send({post: {})
+   * request.post("/boards/foo/threads/1").send({post: {}).end()
    */
   Devchan.app.post("/boards/:boardName/threads/:threadIndex", function(req, res) {
     var boardName = req.params.boardName
@@ -127,6 +127,53 @@ module.exports = function(Devchan) {
           })
         })
       })
+    })
+  })
+
+  /**
+   * request.del("/boards/foo/threads/1").end()
+   */
+  Devchan.app.del("/boards/:boardName/threads/:threadIndex", function(req, res) {
+    var boardName = req.params.boardName
+    var threadIndex = req.params.threadIndex
+
+    models.Thread.findOne({boardName: boardName, initialPostIndex: threadIndex}, function(err, thread) {
+      if (err) throw err
+
+      thread.remove(function(err) {
+        if (err) throw err
+        res.type("application/json").json(200, {})
+      })
+    })
+  })
+
+  /**
+   * request.del("/boards/foo/threads/1/2").end()
+   */
+  Devchan.app.del("/boards/:boardName/threads/:threadIndex/:postIndex", function(req, res) {
+    var boardName = req.params.boardName
+    var threadIndex = req.params.threadIndex
+    var postIndex = req.params.postIndex
+
+    models.Thread.findOne({boardName: boardName, initialPostIndex: threadIndex}, function(err, thread) {
+      if (err) throw err
+
+      if (threadIndex === postIndex) {
+        thread.remove(function(err) {
+          if (err) throw err
+          res.type("application/json").json(200, {})
+        })
+      }
+      else {
+        var postToRemove = _.find(thread.posts, function(post) {
+          return post.index = postIndex
+        })
+        thread.posts.remove(postToRemove)
+        thread.save(function(err, doc) {
+          if (err) throw err
+          res.type("application/json").json(200, {doc: doc})
+        })
+      }
     })
   })
 }

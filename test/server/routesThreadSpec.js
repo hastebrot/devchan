@@ -142,13 +142,13 @@ describe("Routes Thread", function() {
       expect(result1.body.doc.posts[0]).to.have.property("commentHtml", "<p>This is a <strong>comment</strong>.</p>\n")
     })
 
-    describe("initial post without sage", function() {
+    describe("when initial post without sage", function() {
       it("should service return doc data", function() {
         expect(result2.body.doc.posts[0]).to.have.property("sage", true)
       })
     })
 
-    describe("initial post with sage", function() {
+    describe("when initial post with sage", function() {
       it("should service return doc data", function() {
         expect(result2.body.doc.posts[0]).to.have.property("sage", true)
       })
@@ -225,7 +225,7 @@ describe("Routes Thread", function() {
 
     before(function(done) {
       request.post("localhost:3036/boards/" + board1.name + "/threads/" + thread1.initialPostIndex)
-        .send({threadId: thread1._id, post: post2})
+        .send({post: post2})
         .end(function(res) {
           result1 = res
           done()
@@ -234,7 +234,7 @@ describe("Routes Thread", function() {
 
     before(function(done) {
       request.post("localhost:3036/boards/" + board1.name + "/threads/" + thread1.initialPostIndex)
-        .send({threadId: thread1._id, post: post3})
+        .send({post: post3})
         .end(function(res) {
           result2 = res
           done()
@@ -244,7 +244,6 @@ describe("Routes Thread", function() {
     after(function(done) {
       Devchan.db.handler.db.dropDatabase(done)
     })
-
 
     it.skip("should database contain doc data", function(done) {
       Thread.findOne({posts: {$elemMatch: post1}}, function(err, doc) {
@@ -280,7 +279,101 @@ describe("Routes Thread", function() {
     })
   })
 
-  describe("DELETE /boards/:boardName/threads/:threadIndex", function() {})
+  describe("DELETE /boards/:boardName/threads/:threadIndex", function() {
+    var board1 = {_id: "board-1", name: "foo"}
+    var post1 = {_id: "post-1", sage: true, commentPlain: "This is a *comment*."}
+    var post2 = {_id: "post-2", sage: false, commentPlain: "This is a *comment*."}
+    var thread1 = {_id: "thread-1", boardName: "foo", initialPostIndex: 1, lastTimestamp: new Date(),
+      posts: [post1, post2]}
+    var result1 = null
 
-  describe("DELETE /boards/:boardName/threads/:threadIndex/:postIndex", function() {})
+    before(function(done) {
+      Board.create(board1, function(err, doc) {
+        if (err) throw err
+        Thread.create(thread1, done)
+      })
+    })
+
+    before(function(done) {
+      request.del("localhost:3036/boards/" + board1.name + "/threads/" + thread1.initialPostIndex)
+        .send({})
+        .end(function(res) {
+          result1 = res
+          done()
+        })
+    })
+
+    after(function(done) {
+      Devchan.db.handler.db.dropDatabase(done)
+    })
+
+    it("should database not contain deleted thread", function(done) {
+      Thread.find({}, function(err, docs) {
+        if (err) throw err
+        expect(docs).to.have.length(0)
+        done()
+      })
+    })
+  })
+
+  describe("DELETE /boards/:boardName/threads/:threadIndex/:postIndex", function() {
+    var board1 = {_id: "board-1", name: "foo"}
+    var post1 = {_id: "post-1", index: 1, sage: true, commentPlain: "This is a *comment*."}
+    var post2 = {_id: "post-2", index: 2, sage: false, commentPlain: "This is a *comment*."}
+    var thread1 = {_id: "thread-1", boardName: "foo", initialPostIndex: 1, lastTimestamp: new Date(),
+      posts: [post1, post2]}
+    var result1 = null
+
+    before(function(done) {
+      Board.create(board1, function(err, doc) {
+        if (err) throw err
+        Thread.create(thread1, done)
+      })
+    })
+
+    before(function(done) {
+      request.del("localhost:3036/boards/" + board1.name + "/threads/" + thread1.initialPostIndex
+        + "/" + post2.index)
+        .send({})
+        .end(function(res) {
+          result1 = res
+          done()
+        })
+    })
+
+    after(function(done) {
+      Devchan.db.handler.db.dropDatabase(done)
+    })
+
+    it("should database not contain deleted post", function(done) {
+      Thread.find({}, function(err, docs) {
+        if (err) throw err
+        expect(docs[0].posts).to.have.length(1)
+        done()
+      })
+    })
+
+    describe("when delete initial post", function() {
+      var result2 = null
+
+      before(function(done) {
+        request.del("localhost:3036/boards/" + board1.name + "/threads/" + thread1.initialPostIndex
+          + "/" + post1.index)
+          .send({})
+          .end(function(res) {
+            result2 = res
+            done()
+          })
+      })
+
+      it("should database not contain deleted post and thread", function(done) {
+        Thread.find({}, function(err, docs) {
+          if (err) throw err
+          expect(docs).to.have.length(0)
+          done()
+        })
+      })
+    })
+
+  })
 })
