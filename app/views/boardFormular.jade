@@ -21,22 +21,23 @@ div#form-element.well.board-body.clearfix.hide
             a(data-bind="click: $root.showMore", href="#"): small (+)
           div.controls.tabbable.tabs-below
             div.tab-content#form-comment-tabs
-              div.tab-pane.active#tab1(style="height: 170px")
-                textarea.syntax-github.span12.comment-textarea#form-comment(data-bind="value: commentPlain",
+              div.tab-pane.active#tab1
+                textarea.resizable-element.syntax-github.span12.comment-textarea#form-comment(data-bind="value: commentPlain",
                   placeholder="Kommentar", tabindex="3")
                 //div#form-comment-codemirror(data-bind="value: comment")
-              div.tab-pane#tab2(style="height: 170px")
-                div.span12.comment-preview#form-comment-html(data-bind="html: commentPreview")
+              div.post.tab-pane#tab2
+                div.span12#form-comment-html.resizable-element
+                  div.comment(data-bind="html: commentPreview")
             ul.nav.nav-tabs(style="margin: 0; border-top: none")
               li.active
                 a(href="#tab1", data-toggle="tab")
                   i.icon-pencil
-                  span(data-bind="textws: 'Bearbeitung (Alt+Q)'")
+                  span(data-bind="textws: 'Bearbeitung'")
               li.preview
                 a(href="#tab2", data-toggle="tab",
                   data-bind="click: previewCommentHtml")
                   i.icon-eye-open
-                  span(data-bind="textws: 'Vorschau (Alt+W)'")
+                  span(data-bind="textws: 'Vorschau'")
         //div.control-group
         //  span.control-label
         //    i.icon.icon-file
@@ -48,8 +49,8 @@ div#form-element.well.board-body.clearfix.hide
         div.control-group
           div.pull-right.btn-toolbar(style="margin-top: 0")
             div.btn-group
-              button.btn.btn-primary(type="button",
-                data-bind="click: function() { return $parent.createThread($data) }") Faden erstellen
+              button.btn.btn-primary(type="button", data-bind="click: function() { return $parent.createThread($data) }")
+                span(data-bind="text: !$root.currentThread() ? 'Faden erstellen' : 'Kommentar erstellen'")
             div.btn-group(data-toggle="buttons-radio")
               button.btn.active(tabindex="5", type="button", data-bind="click: function() { sage(false) }") Stoß
               button.btn(type="button", data-bind="click: function() { sage(true) }") Säge

@@ -1,24 +1,22 @@
 extends pageLayout
 
 block content
-
+  // PAGE-NAVIGATION.
   include pageNavigation
 
-  // ------------------------------------
-  // CONTENT ELEMENT.
-  // ------------------------------------
   div#content-element.container-fluid
     div.row-fluid
-
-      // ------------------------------------
-      // BOARD ELEMENT.
-      // ------------------------------------
       div#board-element.span12.board
         // BOARD-HEADER.
         include boardHeader
 
+        // BOARD-THREAD-POSTS.
+        div(data-bind="if: $root.currentThread()")
+          include boardThreads
+
         // BOARD-FORMULAR.
         include boardFormular
 
-        // BOARD-BODY.
-        include boardThreads
+        // BOARD-THREADS.
+        div(data-bind="ifnot: $root.currentThread()")
+          include boardThreads

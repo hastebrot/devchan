@@ -93,16 +93,15 @@ var viewModel = {
     $("#form-element").toggleClass("show hide")
   },
   showMore: function() {
-    //var sizesRows = [10, 20]
-    //$("#form-comment").attr({rows: toggleMore ? "10" : "20"})
-
-    var sizesHeight = [170, 340]
-    $("#form-comment-tabs .tab-pane").css("height", toggleMore ? 170 : 340)
-
+    //var sizesHeight = [170, 340]
+    //$("#form-comment-tabs .tab-pane").css("height", toggleMore ? 120 : 240)
     toggleMore = !toggleMore
+    $("#form-comment-tabs .resizable-element").css("height", !toggleMore ? 120 : 240)
   },
 
   refreshBoard: function(callback) {
+    $("#form-comment-tabs .resizable-element").css("height", !toggleMore ? 120 : 240)
+
     var params = {}
     var route = router.execute(location.hash)
     if (route) {
@@ -150,17 +149,22 @@ var viewModel = {
     post = ko.toJS(post)
     if (!viewModel.currentThread()) {
       postThread(viewModel.currentBoard().name(), post, function(res) {
-        location.hash = "#!/" + res.body.doc.boardName + "/thread-"
-          + res.body.doc.initialPostIndex
+//        location.hash = "#!/" + res.body.doc.boardName + "/thread-"
+//          + res.body.doc.initialPostIndex
+        var activePost = new models.Post()
+        viewModel.activePost(activePost)
+        viewModel.refreshBoard()
+        $("#button-comment").click()
       })
     }
     else {
-      postThreadPost(viewModel.currentBoard().name(), viewModel.currentThread().initialPostIndex(), post)
+      postThreadPost(viewModel.currentBoard().name(), viewModel.currentThread().initialPostIndex(), post, function() {
+        var activePost = new models.Post()
+        viewModel.activePost(activePost)
+        viewModel.refreshBoard()
+        $("#button-comment").click()
+      })
     }
-
-    var activePost = new models.Post()
-    viewModel.activePost(activePost)
-    viewModel.refreshBoard()
   },
 
   removePost: function(thread, post) {
@@ -196,7 +200,7 @@ $(document).ready(function() {
     $("#board-element").tooltip({
       selector: "[rel='tooltip']"
     })
-    $(".post").each(function() {
+    $(".thread .post").each(function() {
       var $element = $(this).find(".post-body")
       if ($element.height() > 360) {
         $element.height(360).css("overflow-y", "scroll")
