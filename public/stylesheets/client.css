@@ -193,12 +193,20 @@ ul.thumbnails img {
   border-radius: 0;
   border-left: 5px solid #ddd;
   padding: 0 10px;
-  margin-left: 10px;
+  margin-left: 0px;
 }
 
 .post div.comment blockquote {
   /*display: inline-block;*/
-  padding: 0 8px;
+  padding: 0 10px;
+  margin-left: 0px;
+  border-color: #51A351;
+  font-style: italic;
+  color: #51A351;
+}
+
+.post div.comment blockquote p {
+  font-size: 13px;
 }
 
 .board .board-body .post-tail {

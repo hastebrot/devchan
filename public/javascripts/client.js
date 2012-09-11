@@ -93,10 +93,30 @@ var viewModel = {
     $("#form-element").toggleClass("show hide")
   },
   showMore: function() {
-    //var sizesHeight = [170, 340]
-    //$("#form-comment-tabs .tab-pane").css("height", toggleMore ? 120 : 240)
     toggleMore = !toggleMore
     $("#form-comment-tabs .resizable-element").css("height", !toggleMore ? 120 : 240)
+  },
+
+  commentPost: function(thread, post) {
+    location.hash = "#!/" + thread.boardName() + "/thread-" + thread.initialPostIndex()
+    if (!$("#button-comment").hasClass("active")) {
+      $("#button-comment").click()
+    }
+  },
+  citePost: function(thread, post) {
+    location.hash = "#!/" + thread.boardName() + "/thread-" + thread.initialPostIndex()
+
+    var text = $("<p/>").html(post.commentHtml()).text()
+    text = text.replace(/\s+/g, " ")
+    text = text.length > 65 ? text.slice(0, 65).trim() + "..." : text
+    text = "> [>>" + post.index() + "]() " + text + "\n"
+
+    var currentText = viewModel.activePost().commentPlain()
+    currentText = currentText.length > 0 ? currentText + "\n" : currentText
+    viewModel.activePost().commentPlain(currentText + text)
+    if (!$("#button-comment").hasClass("active")) {
+      $("#button-comment").click()
+    }
   },
 
   refreshBoard: function(callback) {
@@ -126,18 +146,31 @@ var viewModel = {
         viewModel.threads(threads)
         viewModel.currentPage(params.page)
 
-        var activePost = new models.Post()
-        viewModel.activePost(activePost)
-
         if (params.thread) {
           getThread(params.board, params.thread, function(currentThread) {
             viewModel.currentThread(currentThread)
             viewModel.threads([currentThread])
+
+            if (!viewModel.activePost() || !viewModel.currentThread()) {
+              var activePost = new models.Post()
+              viewModel.activePost(activePost)
+              if ($("#button-comment").hasClass("active")) {
+                $("#button-comment").click()
+              }
+            }
             if (typeof(callback) === "function") callback()
           })
         }
         else {
           viewModel.currentThread(null)
+
+          if (!viewModel.activePost() || !viewModel.currentThread()) {
+            var activePost = new models.Post()
+            viewModel.activePost(activePost)
+            if ($("#button-comment").hasClass("active")) {
+              $("#button-comment").click()
+            }
+          }
           if (typeof(callback) === "function") callback()
         }
       })
@@ -149,8 +182,6 @@ var viewModel = {
     post = ko.toJS(post)
     if (!viewModel.currentThread()) {
       postThread(viewModel.currentBoard().name(), post, function(res) {
-//        location.hash = "#!/" + res.body.doc.boardName + "/thread-"
-//          + res.body.doc.initialPostIndex
         var activePost = new models.Post()
         viewModel.activePost(activePost)
         viewModel.refreshBoard()

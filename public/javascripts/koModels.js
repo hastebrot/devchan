@@ -45,6 +45,7 @@ var models = exports = {}
 
     self.commentPreview = ko.observable("")
     self.previewCommentHtml = function() {
+      self.commentPreview("")
       var text = self.commentPlain()
       request.post("/services/markdown").send({text: text}).end(function(res) {
         var html = res.body.html

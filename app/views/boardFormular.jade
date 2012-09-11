@@ -50,7 +50,7 @@ div#form-element.well.board-body.clearfix.hide
           div.pull-right.btn-toolbar(style="margin-top: 0")
             div.btn-group
               button.btn.btn-primary(type="button", data-bind="click: function() { return $parent.createThread($data) }")
-                span(data-bind="text: !$root.currentThread() ? 'Faden erstellen' : 'Kommentar erstellen'")
+                span(data-bind="text: !$root.currentThread() ? 'Faden unter /' + $root.currentBoard().name() + ' erstellen' : 'Kommentar in >>' + $root.currentThread().initialPostIndex() + ' erstellen'")
             div.btn-group(data-toggle="buttons-radio")
               button.btn.active(tabindex="5", type="button", data-bind="click: function() { sage(false) }") Stoß
               button.btn(type="button", data-bind="click: function() { sage(true) }") Säge

@@ -15,14 +15,15 @@ div(data-bind="foreach: threads")
               a(rel="tooltip", -data-title="Permalink zum Pfosten", href="#",
                 data-bind="attr: {href: $parent.href() + hrefPart($index() == 0)}, text: $root.formatDate(timestamp())")
               span(style="color: #d14", data-bind="textws: sage() ? '&middot; SÄGE!' : ''")
-          div.pull-left(style="padding-left: 5px")
-            button.btn.btn-mini(rel="tooltip", -data-title="Pfosten zitieren", type="button",
-              data-bind="text: '>>' + index()")
-          div.pull-left(style="padding-left: 5px")
-            button.btn.btn-mini(rel="tooltip", -data-title="Faden kommentieren", type="button",
-              data-bind="text: 'Kommentieren'")
+          div.pull-left(style="padding-left: 10px")
+            button.btn.btn-mini.btn-success(rel="tooltip", -data-title="Pfosten zitieren", type="button",
+              data-bind="text: '>>' + index(), click: function() { $root.citePost($parent, $data) }")
+          div(data-bind="if: $index() == 0")
+            div.pull-left(style="padding-left: 5px")
+              button.btn.btn-mini.btn-info(rel="tooltip", -data-title="Faden kommentieren", type="button",
+                data-bind="text: 'Kommentieren', click: function() { $root.commentPost($parent, $data) }")
           div.pull-left(style="padding-left: 5px", data-bind="if: $root.boardPassword()")
-            button.btn.btn-mini(rel="tooltip", -data-title="Pfosten entfernen", type="button",
+            button.btn.btn-mini.btn-danger(rel="tooltip", -data-title="Pfosten entfernen", type="button",
               data-bind="click: function() { return $root.removePost($parent, $data) }, text: 'Entfernen'")
         // POST-BODY.
         div.post-body.clearfix
