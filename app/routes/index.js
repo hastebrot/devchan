@@ -149,10 +149,9 @@ module.exports = function(Devchan) {
         return post.index == postIndex
       })
 
-      if (postToRemove.passwordHashed && postToRemove.passwordHashed.length > 0) {
-        if(!passwordHash.verify(password, postToRemove.passwordHashed)) {
-          return res.type("application/json").json(403, {})
-        }
+      var postHasPassword = postToRemove.passwordHashed && postToRemove.passwordHashed.length > 0
+      if (!postHasPassword || !passwordHash.verify(password, postToRemove.passwordHashed)) {
+        return res.type("application/json").json(403, {})
       }
 
       if (threadIndex === postIndex) {

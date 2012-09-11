@@ -1,4 +1,11 @@
 //-------------------------------------
+// MODULE DEPENDENCIES.
+//-------------------------------------
+
+var marked = require("marked")
+marked.setOptions({gfm: true, pedantic: false, sanitize: true})
+
+//-------------------------------------
 // SERVICE ROUTES.
 //-------------------------------------
 
@@ -7,6 +14,10 @@ module.exports = function(Devchan) {
     res.json(200, req.body)
   })
 
-  //Devchan.app.get("/services/markdown", function(req, res) {})
-  //Devchan.app.get("/services/upload", function(req, res) {})
+  Devchan.app.post("/services/markdown", function(req, res) {
+    var html = marked(req.body.text)
+    res.json(200, {html: html})
+  })
+
+  //Devchan.app.post("/services/upload", function(req, res) {})
 }

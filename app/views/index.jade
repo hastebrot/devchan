@@ -57,20 +57,23 @@ block content
             div.control-group
               label.control-label(for="form-comment") Kommentar
                 br
-                a(data-bind="click: $parent.showMore", href="#") (mehr)
+                a(data-bind="click: $root.showMore", href="#") (mehr)
               div.controls.tabbable.tabs-below
-                div.tab-content
-                  textarea.syntax-github.span12#form-comment(rows="10", data-bind="value: commentPlain", 
-                    placeholder="Kommentar eingeben...",
-                    style="border-bottom-left-radius: 0; border-bottom-right-radius: 0;")
-                  //div#form-comment-codemirror(data-bind="value: comment")
+                div.tab-content#form-comment-tabs
+                  div.tab-pane.active#tab1(style="height: 170px")
+                    textarea.syntax-github.span12.comment-textarea#form-comment(data-bind="value: commentPlain",
+                      placeholder="Kommentar eingeben...")
+                    //div#form-comment-codemirror(data-bind="value: comment")
+                  div.tab-pane#tab2(style="height: 170px")
+                    div.span12.comment-preview#form-comment-html(data-bind="html: commentPreview")
                 ul.nav.nav-tabs(style="margin: 0; border-top: none")
                   li.active
-                    a(href="#")
-                      i.icon-pencil(style="background-image: url('vendor/bootstrap-2.1.0/img/glyphicons-halflings.png');")
-                      span(data-bind="textws: 'Editor'")
+                    a(href="#tab1", data-toggle="tab")
+                      i.icon-pencil
+                      span(data-bind="textws: 'Bearbeitung'")
                   li
-                    a(href="#")
+                    a(href="#tab2", data-toggle="tab",
+                      data-bind="click: previewCommentHtml")
                       i.icon-eye-open
                       span(data-bind="textws: 'Vorschau'")
             //- div.control-group
@@ -80,11 +83,11 @@ block content
             //-     div.input-append
             //-       span.span6.uneditable-input#form-attachment(type="text")
             //-       button.btn(type="button") Datei auswählen...
-            
-            //- div.control-group
-            //-   label.control-label(for="form-password") Kennwort
-            //-   div.controls
-            //-     input.span5#form-password(type="password")
+            div.control-group
+              label.control-label(for="form-password") Kennwort
+              div.controls
+                input.span5#form-password(type="password", placeholder="Optionales Kennwort",
+                  data-bind="value: password")
 
     div.row-fluid
 

@@ -399,25 +399,24 @@ describe("Routes Thread", function() {
       ], done)
     })
 
-    describe("context initial and subsequent posts", function(done) {
-      it("should delete subsequent post", function(done) {
+    describe("with empty password", function() {
+      it("should not delete subsequent post", function(done) {
         request.del(util.format(url, board1.name, thread1.initialPostIndex, post2.index)).end(function(res) {
-          expect(res.status).to.equal(200)
+          expect(res.status).to.equal(403)
           Thread.findById(thread1._id, function(err, doc) {
             if (err) throw err
-            expect(doc.posts).to.have.length(1)
-            expect(doc.posts[0]._id).to.equal(post1._id)
+            expect(doc.posts).to.have.length(2)
             done()
           })
         })
       })
 
-      it("should delete initial post", function(done) {
+      it("should not delete initial post", function(done) {
         request.del(util.format(url, board1.name, thread1.initialPostIndex, post1.index)).end(function(res) {
-          expect(res.status).to.equal(200)
+          expect(res.status).to.equal(403)
           Thread.findById(thread1._id, function(err, doc) {
             if (err) throw err
-            expect(doc).to.be.null
+            expect(doc.posts).to.have.length(2)
             done()
           })
         })
@@ -425,26 +424,52 @@ describe("Routes Thread", function() {
     })
 
     describe("context passwords", function(done) {
-      describe("with invalid password", function() {
+      describe("with empty password", function() {
         it("should not delete subsequent post", function(done) {
           request.del(util.format(url, board1.name, thread2.initialPostIndex, post4.index)).end(function(res) {
-            expect(res.status).to.equal(403)
-            Thread.findById(thread2._id, function(err, doc) {
-              if (err) throw err
-              expect(doc.posts).to.have.length(2)
-              done()
-            })
+              expect(res.status).to.equal(403)
+              Thread.findById(thread2._id, function(err, doc) {
+                if (err) throw err
+                expect(doc.posts).to.have.length(2)
+                done()
+              })
           })
         })
 
         it("should not delete initial post", function(done) {
           request.del(util.format(url, board1.name, thread2.initialPostIndex, post3.index)).end(function(res) {
-            expect(res.status).to.equal(403)
-            Thread.findById(thread2._id, function(err, doc) {
-              if (err) throw err
-              expect(doc.posts).to.have.length(2)
-              done()
-            })
+              expect(res.status).to.equal(403)
+              Thread.findById(thread2._id, function(err, doc) {
+                if (err) throw err
+                expect(doc.posts).to.have.length(2)
+                done()
+              })
+          })
+        })
+      })
+
+      describe("with invalid password", function() {
+        it("should not delete subsequent post", function(done) {
+          request.del(util.format(url, board1.name, thread2.initialPostIndex, post4.index))
+            .send({password: "wrong"}).end(function(res) {
+              expect(res.status).to.equal(403)
+              Thread.findById(thread2._id, function(err, doc) {
+                if (err) throw err
+                expect(doc.posts).to.have.length(2)
+                done()
+              })
+          })
+        })
+
+        it("should not delete initial post", function(done) {
+          request.del(util.format(url, board1.name, thread2.initialPostIndex, post3.index))
+            .send({password: "wrong"}).end(function(res) {
+              expect(res.status).to.equal(403)
+              Thread.findById(thread2._id, function(err, doc) {
+                if (err) throw err
+                expect(doc.posts).to.have.length(2)
+                done()
+              })
           })
         })
       })

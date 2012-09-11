@@ -42,6 +42,15 @@ var models = exports = {}
       if (isPrimary) { return "" }
       return "/post-" + self.index()
     }
+
+    self.commentPreview = ko.observable("")
+    self.previewCommentHtml = function() {
+      var text = self.commentPlain()
+      request.post("/services/markdown").send({text: text}).end(function(res) {
+        var html = res.body.html
+        self.commentPreview(html)
+      })
+    }
     helpers.koCopy(data, self, mapping)
   }
 

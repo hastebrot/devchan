@@ -57,9 +57,9 @@ var postThreadPost = function(boardName, threadIndex, post, callback) {
   request.post(url).send(query).end(callback)
 }
 
-var deleteThreadPost = function(boardName, threadIndex, postIndex, callback) {
+var deleteThreadPost = function(boardName, threadIndex, postIndex, password, callback) {
   var url = "/boards/" + boardName + "/threads/" + threadIndex + "/" + postIndex
-  var query = {}
+  var query = password ? {password: password} : {}
   request.del(url).send(query).end(callback)
 }
 
@@ -93,7 +93,12 @@ var viewModel = {
     $("#form-element").toggleClass("show hide")
   },
   showMore: function() {
-    $("#form-comment").attr({rows: toggleMore ? "10" : "20"})
+    //var sizesRows = [10, 20]
+    //$("#form-comment").attr({rows: toggleMore ? "10" : "20"})
+
+    var sizesHeight = [170, 340]
+    $("#form-comment-tabs .tab-pane").css("height", toggleMore ? 170 : 340)
+
     toggleMore = !toggleMore
   },
 
@@ -159,11 +164,16 @@ var viewModel = {
   },
 
   removePost: function(thread, post) {
-    deleteThreadPost(thread.boardName(), thread.initialPostIndex(), post.index())
-    if (thread.initialPostIndex() === post.index()) {
-      location.hash = "#!/" + thread.boardName()
-    }
-    viewModel.refreshBoard()
+    var password = viewModel.boardPassword()
+    deleteThreadPost(thread.boardName(), thread.initialPostIndex(), post.index(), password, function(res) {
+      console.log(res)
+      if (res.ok) {
+        if (thread.initialPostIndex() === post.index()) {
+          location.hash = "#!/" + thread.boardName()
+        }
+        viewModel.refreshBoard()
+      }
+    })
   },
 
   formatDate: helpers.formatDate
