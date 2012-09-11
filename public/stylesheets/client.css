@@ -29,11 +29,6 @@ body {
   margin-top: 60px;
 }
 
-#form-element {
-  padding-top: 10px;
-  padding-bottom: 10px;
-}
-
 .form-horizontal .control-group {
   margin-bottom: 10px;
 }
@@ -43,10 +38,10 @@ body {
 }
 
 .form-horizontal .control-label {
-  width: 100px;
+  width: 20px;
 }
 .form-horizontal .controls {
-  margin-left: 110px;
+  margin-left: 30px;
 }
 .form-horizontal legend .btn {
   margin-bottom: 6px;
@@ -222,6 +217,12 @@ ul.thumbnails img {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
   display: block !important;
+}
+
+#form-element {
+  padding: 20px;
+  padding-bottom: 0;
+  margin-bottom: 10px;
 }
 
 .comment-textarea:focus {

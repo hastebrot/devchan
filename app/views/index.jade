@@ -31,67 +31,6 @@ block content
     div.row-fluid
 
       // ------------------------------------
-      // FORM ELEMENT.
-      // ------------------------------------
-      div#form-element.span12.well.hide
-        form.form-horizontal(data-bind="with: activePost")
-          div.form-header
-            legend.clearfix Neuen Faden eröffnen
-              div.pull-right.btn-toolbar(style="margin-top: 0")
-                div.btn-group
-                  button.btn.btn-primary(type="button", 
-                    data-bind="click: function() { return $parent.createThread($data) }") Faden eröffnen
-                div.btn-group(data-toggle="buttons-radio")
-                  button.btn.active(type="button", data-bind="click: function() { sage(false) }") Stoß
-                  button.btn(type="button", data-bind="click: function() { sage(true) }") Säge
-          div.form-body
-            div.control-group
-              label.control-label(for="form-subject") Betreff
-              div.controls
-                input.span9#form-subject(type="text", data-bind="value: subject",
-                  placeholder="Betreff angeben...")
-            div.control-group
-              label.control-label Name
-              div.controls
-                input.span9#form-name(type="text", data-bind="value: name", placeholder="Anonymous")
-            div.control-group
-              label.control-label(for="form-comment") Kommentar
-                br
-                a(data-bind="click: $root.showMore", href="#") (mehr)
-              div.controls.tabbable.tabs-below
-                div.tab-content#form-comment-tabs
-                  div.tab-pane.active#tab1(style="height: 170px")
-                    textarea.syntax-github.span12.comment-textarea#form-comment(data-bind="value: commentPlain",
-                      placeholder="Kommentar eingeben...")
-                    //div#form-comment-codemirror(data-bind="value: comment")
-                  div.tab-pane#tab2(style="height: 170px")
-                    div.span12.comment-preview#form-comment-html(data-bind="html: commentPreview")
-                ul.nav.nav-tabs(style="margin: 0; border-top: none")
-                  li.active
-                    a(href="#tab1", data-toggle="tab")
-                      i.icon-pencil
-                      span(data-bind="textws: 'Bearbeitung'")
-                  li
-                    a(href="#tab2", data-toggle="tab",
-                      data-bind="click: previewCommentHtml")
-                      i.icon-eye-open
-                      span(data-bind="textws: 'Vorschau'")
-            //- div.control-group
-            //-   label.control-label(for="form-attachment") Datei
-            //-   div.controls
-            //-     //input.span10#form-attachment(type="file")
-            //-     div.input-append
-            //-       span.span6.uneditable-input#form-attachment(type="text")
-            //-       button.btn(type="button") Datei auswählen...
-            div.control-group
-              label.control-label(for="form-password") Kennwort
-              div.controls
-                input.span5#form-password(type="password", placeholder="Optionales Kennwort",
-                  data-bind="value: password")
-
-    div.row-fluid
-
-      // ------------------------------------
       // BOARD ELEMENT.
       // ------------------------------------
       div#board-element.span12.board
@@ -108,9 +47,68 @@ block content
                     a(href="#", data-bind="attr: {href: $parent.currentBoard().href() + '/page-' + $data}, text: $data")
               div.span3#user-password(style="text-align: right")
                 input.span9(data-bind="value: boardPassword, valueUpdate: 'afterkeydown'",
-                  type="password", placeholder="Kennwort angeben...")
+                  type="password", placeholder="Kennwort zum Löschen...")
             //div#user-password
         // BOARD-BODY.
+        div.well.board-body.clearfix
+          div#form-element.span12.well.hidden
+            form.form-horizontal(data-bind="with: activePost")
+              div.form-body
+                div.control-group
+                  span.control-label
+                    i.icon.icon-chevron-right
+                  div.controls
+                    input.span9#form-subject(type="text", data-bind="value: subject",
+                      placeholder="Betreff")
+                div.control-group
+                  span.control-label
+                    i.icon.icon-user
+                  div.controls
+                    input.span9#form-name(type="text", data-bind="value: name", placeholder="Anonymous")
+                div.control-group
+                  span.control-label
+                    i.icon.icon-comment
+                    br
+                    a(data-bind="click: $root.showMore", href="#"): small (+)
+                  div.controls.tabbable.tabs-below
+                    div.tab-content#form-comment-tabs
+                      div.tab-pane.active#tab1(style="height: 170px")
+                        textarea.syntax-github.span12.comment-textarea#form-comment(data-bind="value: commentPlain",
+                          placeholder="Kommentar...")
+                        //div#form-comment-codemirror(data-bind="value: comment")
+                      div.tab-pane#tab2(style="height: 170px")
+                        div.span12.comment-preview#form-comment-html(data-bind="html: commentPreview")
+                    ul.nav.nav-tabs(style="margin: 0; border-top: none")
+                      li.active
+                        a(href="#tab1", data-toggle="tab")
+                          i.icon-pencil
+                          span(data-bind="textws: 'Bearbeitung'")
+                      li
+                        a(href="#tab2", data-toggle="tab",
+                          data-bind="click: previewCommentHtml")
+                          i.icon-eye-open
+                          span(data-bind="textws: 'Vorschau'")
+                //- div.control-group
+                //-   label.control-label(for="form-attachment") Datei
+                //-   div.controls
+                //-     //input.span10#form-attachment(type="file")
+                //-     div.input-append
+                //-       span.span6.uneditable-input#form-attachment(type="text")
+                //-       button.btn(type="button") Datei auswählen...
+                div.control-group
+                  div.pull-right.btn-toolbar(style="margin-top: 0")
+                    div.btn-group
+                      button.btn.btn-primary(type="button",
+                        data-bind="click: function() { return $parent.createThread($data) }") Faden erstellen
+                    div.btn-group(data-toggle="buttons-radio")
+                      button.btn.active(type="button", data-bind="click: function() { sage(false) }") Stoß
+                      button.btn(type="button", data-bind="click: function() { sage(true) }") Säge
+                  span.control-label
+                    i.icon.icon-lock
+                  div.controls
+                    input.span5#form-password(type="password", placeholder="Kennwort",
+                      data-bind="value: password")
+
         div(data-bind="foreach: threads")
           div.well.board-body
           
