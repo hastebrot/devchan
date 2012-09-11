@@ -1,0 +1,16 @@
+
+div.well.board-header
+  legend.clearfix
+    div.row-fluid
+      div.span3
+        p#board-title
+          span(data-bind="textws: '/' + currentBoard().name()")
+          small(data-bind="textws: '(' + currentBoard().description() + ')'")
+      div.span6#board-pages.pagination(style="text-align: center", data-bind="ifnot: $root.currentThread()")
+        ul(data-bind="foreach: boardPages")
+          li(data-bind="css: {active: $data == $parent.currentPage()}")
+            a(href="#", data-bind="attr: {href: $parent.currentBoard().href() + '/page-' + $data}, text: $data")
+      div.span3#user-password(style="text-align: right")
+        input.span9(data-bind="value: boardPassword, valueUpdate: 'afterkeydown'",
+          type="password", placeholder="Kennwort zum Löschen...")
+    //div#user-password

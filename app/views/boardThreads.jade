@@ -1,0 +1,52 @@
+
+div(data-bind="foreach: threads")
+  div.well.board-body
+
+    // THREAD.
+    div.thread(data-bind="foreach: posts")
+      // POST.
+      div.well.post(data-bind="css: {'post-head': $index() == 0, 'post-tail': $index() > 0}")
+        // POST-HEADER.
+        legend.post-header.clearfix
+          div.pull-left
+            span(data-bind="textws: subject()")
+            small
+              span(data-bind="textws: (name() || 'Horst') + ' &middot;'")
+              a(rel="tooltip", -data-title="Permalink zum Pfosten", href="#",
+                data-bind="attr: {href: $parent.href() + hrefPart($index() == 0)}, text: $root.formatDate(timestamp())")
+              span(style="color: #d14", data-bind="textws: sage() ? '&middot; SÄGE!' : ''")
+          div.pull-left(style="padding-left: 5px")
+            button.btn.btn-mini(rel="tooltip", -data-title="Pfosten zitieren", type="button",
+              data-bind="text: '>>' + index()")
+          div.pull-left(style="padding-left: 5px")
+            button.btn.btn-mini(rel="tooltip", -data-title="Faden kommentieren", type="button",
+              data-bind="text: 'Kommentieren'")
+          div.pull-left(style="padding-left: 5px", data-bind="if: $root.boardPassword()")
+            button.btn.btn-mini(rel="tooltip", -data-title="Pfosten entfernen", type="button",
+              data-bind="click: function() { return $root.removePost($parent, $data) }, text: 'Entfernen'")
+        // POST-BODY.
+        div.post-body.clearfix
+          // POST-ATTACHMENTS.
+          div.pull-left(data-bind="if: ko.toJSON(attachments()) != '[]'")
+            ul.thumbnails(data-bind="foreach: attachments")
+              li: a.thumbnail(href="#")
+                img(data-bind="attr: {src: 'images/' + filename()}", width="200")
+                div.caption
+                  p.filename(data-bind="text: filename")
+                  p.metadata(data-bind="text: filetype() + ', ' + imagesize() + ', ' + filesize()")
+          //ul.thumbnails.pull-left
+          //  li: a.thumbnail(href="#")
+          //    div.caption
+          //      p.filename pig-out-button.png
+          //      p.metadata PNG, 353x344, 179 KB
+          //    img(src="uploads/pig-out-button.png", width="200")
+
+          // POST-COMMENT.
+          div.comment.pull-left(data-bind="html: commentHtml")
+
+        // POST-MORE.
+        div(data-bind="if: $index() == 0")
+          div.post-more
+            p(style="color: gray")
+              span(data-bind="textws: $parent.countPosts()")
+              span Pfosten nicht angezeigt.

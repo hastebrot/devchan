@@ -1,0 +1,60 @@
+
+div#form-element.well.board-body.clearfix.hide
+  div.span12.well
+    form.form-horizontal(data-bind="with: activePost")
+      div.form-body
+        div.control-group
+          span.control-label
+            i.icon.icon-chevron-right
+          div.controls
+            input.span12#form-subject(tabindex="1", type="text", data-bind="value: subject",
+              placeholder="Betreff")
+        div.control-group
+          span.control-label
+            i.icon.icon-user
+          div.controls
+            input.span12#form-name(tabindex="2", type="text", data-bind="value: name", placeholder="Anonymous")
+        div.control-group
+          span.control-label
+            i.icon.icon-comment
+            br
+            a(data-bind="click: $root.showMore", href="#"): small (+)
+          div.controls.tabbable.tabs-below
+            div.tab-content#form-comment-tabs
+              div.tab-pane.active#tab1(style="height: 170px")
+                textarea.syntax-github.span12.comment-textarea#form-comment(data-bind="value: commentPlain",
+                  placeholder="Kommentar", tabindex="3")
+                //div#form-comment-codemirror(data-bind="value: comment")
+              div.tab-pane#tab2(style="height: 170px")
+                div.span12.comment-preview#form-comment-html(data-bind="html: commentPreview")
+            ul.nav.nav-tabs(style="margin: 0; border-top: none")
+              li.active
+                a(href="#tab1", data-toggle="tab")
+                  i.icon-pencil
+                  span(data-bind="textws: 'Bearbeitung (Alt+Q)'")
+              li.preview
+                a(href="#tab2", data-toggle="tab",
+                  data-bind="click: previewCommentHtml")
+                  i.icon-eye-open
+                  span(data-bind="textws: 'Vorschau (Alt+W)'")
+        //div.control-group
+        //  span.control-label
+        //    i.icon.icon-file
+        //  div.controls
+        //    //input.span10#form-attachment(type="file")
+        //    div.input-append
+        //      span.span6.uneditable-input#form-attachment(type="text")
+        //      button.btn(type="button") Datei auswählen...
+        div.control-group
+          div.pull-right.btn-toolbar(style="margin-top: 0")
+            div.btn-group
+              button.btn.btn-primary(type="button",
+                data-bind="click: function() { return $parent.createThread($data) }") Faden erstellen
+            div.btn-group(data-toggle="buttons-radio")
+              button.btn.active(tabindex="5", type="button", data-bind="click: function() { sage(false) }") Stoß
+              button.btn(type="button", data-bind="click: function() { sage(true) }") Säge
+          span.control-label
+            i.icon.icon-lock
+          div.controls
+            input.span5#form-password(tabindex="4", type="password", placeholder="Kennwort",
+            data-bind="value: password")

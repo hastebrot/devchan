@@ -22,7 +22,7 @@ module.exports = function(Devchan) {
    * request.get("/")
    */
   Devchan.app.get("/", function(req, res) {
-    res.render("index", {title: "devchan"})
+    res.render("board", {title: "devchan"})
   })
 
   /**

@@ -1,0 +1,24 @@
+extends pageLayout
+
+block content
+
+  include pageNavigation
+
+  // ------------------------------------
+  // CONTENT ELEMENT.
+  // ------------------------------------
+  div#content-element.container-fluid
+    div.row-fluid
+
+      // ------------------------------------
+      // BOARD ELEMENT.
+      // ------------------------------------
+      div#board-element.span12.board
+        // BOARD-HEADER.
+        include boardHeader
+
+        // BOARD-FORMULAR.
+        include boardFormular
+
+        // BOARD-BODY.
+        include boardThreads
