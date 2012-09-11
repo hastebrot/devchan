@@ -151,30 +151,45 @@ var viewModel = {
             viewModel.currentThread(currentThread)
             viewModel.threads([currentThread])
 
-            if (!viewModel.activePost() || !viewModel.currentThread()) {
-              var activePost = new models.Post()
-              viewModel.activePost(activePost)
-              if ($("#button-comment").hasClass("active")) {
-                $("#button-comment").click()
-              }
-            }
+            viewModel.refreshBoardFinish()
             if (typeof(callback) === "function") callback()
           })
         }
         else {
           viewModel.currentThread(null)
 
-          if (!viewModel.activePost() || !viewModel.currentThread()) {
-            var activePost = new models.Post()
-            viewModel.activePost(activePost)
-            if ($("#button-comment").hasClass("active")) {
-              $("#button-comment").click()
-            }
-          }
+          viewModel.refreshBoardFinish()
           if (typeof(callback) === "function") callback()
         }
       })
     })
+  },
+  refreshBoardFinish: function() {
+    $("#board-element").tooltip({
+      selector: "[rel='tooltip']"
+    })
+    $(".thread .post").each(function() {
+      var $element = $(this).find(".post-body")
+      if ($element.height() > 360) {
+        $element.height(360).css("overflow-y", "scroll")
+      }
+    })
+
+    var codeLangPattern = /lang-(.+)/
+    $(".thread .post pre code").each(function() {
+      var $element = $(this)
+      var lang = $element.attr("class").match(codeLangPattern)[1]
+      CodeMirror.runMode($element.text(), lang, this)
+      $element.addClass("cm-s-default")
+    })
+
+    if (!viewModel.activePost() || !viewModel.currentThread()) {
+      var activePost = new models.Post()
+      viewModel.activePost(activePost)
+      if ($("#button-comment").hasClass("active")) {
+        $("#button-comment").click()
+      }
+    }
   },
 
   createThread: function(post) {
@@ -227,15 +242,6 @@ $(document).ready(function() {
 
   viewModel.refreshBoard(function() {
     ko.applyBindings(viewModel)
-
-    $("#board-element").tooltip({
-      selector: "[rel='tooltip']"
-    })
-    $(".thread .post").each(function() {
-      var $element = $(this).find(".post-body")
-      if ($element.height() > 360) {
-        $element.height(360).css("overflow-y", "scroll")
-      }
-    })
+    viewModel.refreshBoardFinish()
   })
 })
