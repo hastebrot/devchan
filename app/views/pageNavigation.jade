@@ -1,0 +1,22 @@
+//-------------------------------------
+// TOP ELEMENT.
+//-------------------------------------
+
+div#top-element.navbar.navbar-fixed-top
+  div.navbar-inner
+    div.container-fluid
+      a#brand.brand(href="#") #{title} #{" "}
+        small#brand-subtitle
+      ul.nav(data-bind="foreach: boards")
+        li(data-bind="css: {active: $data == $parent.currentBoard()}")
+          a(href="#", data-bind="attr: {href: href()}")
+            span(data-bind="textws: '/' + name()")
+      form.navbar-form.pull-right
+        div.btn-group
+          button.btn.btn-warning(type="button", data-bind="click: refreshBoard")
+            i.icon-refresh.icon-white
+            span(data-bind="text: ' Aktualisieren'")
+          button.btn.btn-info#button-comment(type="button", data-toggle="button",
+              data-bind="click: showForm")
+            i.icon-edit.icon-white
+            span(data-bind="text: ' Kommentieren'")
