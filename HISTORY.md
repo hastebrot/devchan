@@ -7,6 +7,9 @@
  * Added; Delete function for threads and posts.
  * Changed; Client-side router to use hashbang urls (`#!`).
  * Added; Password function for posts.
+ * Improved; Converted formular to an inline element and gave it a sleek design.
+ * Added; Cite and comment functionality. Really need to improve timing.
+ * Added; Code syntax highlighting with CodeMirror.
 
 0.0.2 / 2012-09-10
 ------------------

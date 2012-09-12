@@ -20,6 +20,16 @@ body {
   /*font-family: "consolas";*/
 }
 
+#form-element .nav-tabs li.active a {
+  border-color: transparent #ccc #ccc #ccc;
+}
+#form-element .nav-tabs i {
+  background-image: url("/vendor/bootstrap-2.1.0/img/glyphicons-halflings.png") !important;
+}
+#form-element .nav-tabs li.active.preview a {
+  background-color: ghostwhite;
+}
+
 #top-element {
   margin-bottom: 20px;
   min-width: 800px;
@@ -27,11 +37,6 @@ body {
 
 #content-element {
   margin-top: 60px;
-}
-
-#form-element {
-  padding-top: 10px;
-  padding-bottom: 10px;
 }
 
 .form-horizontal .control-group {
@@ -43,10 +48,10 @@ body {
 }
 
 .form-horizontal .control-label {
-  width: 100px;
+  width: 14px;
 }
 .form-horizontal .controls {
-  margin-left: 110px;
+  margin-left: 24px;
 }
 .form-horizontal legend .btn {
   margin-bottom: 6px;
@@ -119,7 +124,6 @@ legend .pagination {
   margin-bottom: 15px;
 }
 
-
 .board .board-body ul.thumbnails {
   margin: 0;
 }
@@ -189,12 +193,20 @@ ul.thumbnails img {
   border-radius: 0;
   border-left: 5px solid #ddd;
   padding: 0 10px;
-  margin-left: 10px;
+  margin-left: 0px;
 }
 
 .post div.comment blockquote {
   /*display: inline-block;*/
-  padding: 0 8px;
+  padding: 0 10px;
+  margin-left: 0px;
+  border-color: #51A351;
+  font-style: italic;
+  color: #51A351;
+}
+
+.post div.comment blockquote p {
+  font-size: 13px;
 }
 
 .board .board-body .post-tail {
@@ -216,6 +228,29 @@ ul.thumbnails img {
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
 }*/
 
+.board-header legend {
+  line-height: normal;
+  padding-top: 0px;
+  padding-bottom: 2px;
+}
+
+.board-header #board-title {
+  margin: 0;
+  padding: 0;
+  padding-top: 3px;
+
+}
+.board-header .pagination {
+  height: 28px;
+}
+.board-header .pagination a, .board-header .pagination span {
+  padding: 0 15px;
+  line-height: 28px;
+}
+.board-header #user-password input {
+  margin: 0;
+}
+
 .comment-textarea {
   height: 100%;
   max-width: 100%;
@@ -224,18 +259,22 @@ ul.thumbnails img {
   display: block !important;
 }
 
+#form-element > div {
+  padding: 20px;
+  padding-bottom: 0;
+  margin-bottom: 10px;
+}
+
 .comment-textarea:focus {
   border-color: #CCC;
 }
 
-.comment-preview {
+#form-comment-html {
+  display: block !important;
   overflow-y: scroll;
   height: 100%;
   width: 100%;
   max-width: 100%;
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-  display: inline-block;
   float: none;
   background-color: ghostwhite;
   border: 1px solid #CCC;

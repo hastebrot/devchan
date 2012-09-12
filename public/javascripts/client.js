@@ -93,16 +93,35 @@ var viewModel = {
     $("#form-element").toggleClass("show hide")
   },
   showMore: function() {
-    //var sizesRows = [10, 20]
-    //$("#form-comment").attr({rows: toggleMore ? "10" : "20"})
-
-    var sizesHeight = [170, 340]
-    $("#form-comment-tabs .tab-pane").css("height", toggleMore ? 170 : 340)
-
     toggleMore = !toggleMore
+    $("#form-comment-tabs .resizable-element").css("height", !toggleMore ? 120 : 240)
+  },
+
+  commentPost: function(thread, post) {
+    location.hash = "#!/" + thread.boardName() + "/thread-" + thread.initialPostIndex()
+    if (!$("#button-comment").hasClass("active")) {
+      $("#button-comment").click()
+    }
+  },
+  citePost: function(thread, post) {
+    location.hash = "#!/" + thread.boardName() + "/thread-" + thread.initialPostIndex()
+
+    var text = $("<p/>").html(post.commentHtml()).text()
+    text = text.replace(/\s+/g, " ")
+    text = text.length > 65 ? text.slice(0, 65).trim() + "..." : text
+    text = "> [>>" + post.index() + "]() " + text + "\n"
+
+    var currentText = viewModel.activePost().commentPlain()
+    currentText = currentText.length > 0 ? currentText + "\n" : currentText
+    viewModel.activePost().commentPlain(currentText + text)
+    if (!$("#button-comment").hasClass("active")) {
+      $("#button-comment").click()
+    }
   },
 
   refreshBoard: function(callback) {
+    $("#form-comment-tabs .resizable-element").css("height", !toggleMore ? 120 : 240)
+
     var params = {}
     var route = router.execute(location.hash)
     if (route) {
@@ -127,22 +146,50 @@ var viewModel = {
         viewModel.threads(threads)
         viewModel.currentPage(params.page)
 
-        var activePost = new models.Post()
-        viewModel.activePost(activePost)
-
         if (params.thread) {
           getThread(params.board, params.thread, function(currentThread) {
             viewModel.currentThread(currentThread)
             viewModel.threads([currentThread])
+
+            viewModel.refreshBoardFinish()
             if (typeof(callback) === "function") callback()
           })
         }
         else {
           viewModel.currentThread(null)
+
+          viewModel.refreshBoardFinish()
           if (typeof(callback) === "function") callback()
         }
       })
     })
+  },
+  refreshBoardFinish: function() {
+    $("#board-element").tooltip({
+      selector: "[rel='tooltip']"
+    })
+    $(".thread .post").each(function() {
+      var $element = $(this).find(".post-body")
+      if ($element.height() > 360) {
+        $element.height(360).css("overflow-y", "scroll")
+      }
+    })
+
+    var codeLangPattern = /lang-(.+)/
+    $(".thread .post pre code").each(function() {
+      var $element = $(this)
+      var lang = $element.attr("class").match(codeLangPattern)[1]
+      CodeMirror.runMode($element.text(), lang, this)
+      $element.addClass("cm-s-default")
+    })
+
+    if (!viewModel.activePost() || !viewModel.currentThread()) {
+      var activePost = new models.Post()
+      viewModel.activePost(activePost)
+      if ($("#button-comment").hasClass("active")) {
+        $("#button-comment").click()
+      }
+    }
   },
 
   createThread: function(post) {
@@ -150,17 +197,20 @@ var viewModel = {
     post = ko.toJS(post)
     if (!viewModel.currentThread()) {
       postThread(viewModel.currentBoard().name(), post, function(res) {
-        location.hash = "#!/" + res.body.doc.boardName + "/thread-"
-          + res.body.doc.initialPostIndex
+        var activePost = new models.Post()
+        viewModel.activePost(activePost)
+        viewModel.refreshBoard()
+        $("#button-comment").click()
       })
     }
     else {
-      postThreadPost(viewModel.currentBoard().name(), viewModel.currentThread().initialPostIndex(), post)
+      postThreadPost(viewModel.currentBoard().name(), viewModel.currentThread().initialPostIndex(), post, function() {
+        var activePost = new models.Post()
+        viewModel.activePost(activePost)
+        viewModel.refreshBoard()
+        $("#button-comment").click()
+      })
     }
-
-    var activePost = new models.Post()
-    viewModel.activePost(activePost)
-    viewModel.refreshBoard()
   },
 
   removePost: function(thread, post) {
@@ -192,15 +242,6 @@ $(document).ready(function() {
 
   viewModel.refreshBoard(function() {
     ko.applyBindings(viewModel)
-
-    $("#board-element").tooltip({
-      selector: "[rel='tooltip']"
-    })
-    $(".post").each(function() {
-      var $element = $(this).find(".post-body")
-      if ($element.height() > 360) {
-        $element.height(360).css("overflow-y", "scroll")
-      }
-    })
+    viewModel.refreshBoardFinish()
   })
 })

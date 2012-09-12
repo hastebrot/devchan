@@ -45,10 +45,19 @@ var models = exports = {}
 
     self.commentPreview = ko.observable("")
     self.previewCommentHtml = function() {
+      self.commentPreview("")
       var text = self.commentPlain()
       request.post("/services/markdown").send({text: text}).end(function(res) {
         var html = res.body.html
         self.commentPreview(html)
+
+        var codeLangPattern = /lang-(.+)/
+        $("#form-element .post pre code").each(function() {
+          var $element = $(this)
+          var lang = $element.attr("class").match(codeLangPattern)[1]
+          CodeMirror.runMode($element.text(), lang, this)
+          $element.addClass("cm-s-default")
+        })
       })
     }
     helpers.koCopy(data, self, mapping)

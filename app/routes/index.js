@@ -22,7 +22,7 @@ module.exports = function(Devchan) {
    * request.get("/")
    */
   Devchan.app.get("/", function(req, res) {
-    res.render("index", {title: "devchan"})
+    res.render("board", {title: "devchan"})
   })
 
   /**
@@ -44,7 +44,7 @@ module.exports = function(Devchan) {
     models.Thread
       .find({boardName: boardName})
       .sort("-lastTimestamp -initialPostIndex")
-      .limit(5).skip((pageIndex - 1) * 5)
+      .limit(10).skip((pageIndex - 1) * 10)
       .exec(function(err, threads) {
         if (err) throw err
         //threads = _.collect(threads, function(thread) {

@@ -2,6 +2,11 @@
 
 > An image board for programmers.
 
+## Features
+
+- Markdown syntax support and code syntax highlighting.
+- Inline formular to create new threads and posts.
+
 ## Installation
 
     $ cd devchan

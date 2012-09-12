@@ -3,7 +3,7 @@
 
 ## Short-term Features
 
-- Minimal post functionality
+- Essential post functionality
   - Create and delete posts with password
   - Confirmation message for deletion
 - Post message
@@ -21,8 +21,6 @@
   - Upload images and archives
   - Process thumbnail images with ImageMagick
   - Extract meta information and mimetypes.
-
 - Filter or replace words.
 - Sticky and locked threads.
-- Overhaul of resources in the webapi.
-
+- Overhaul of models and resources in the webapi.
