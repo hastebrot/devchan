@@ -67,16 +67,17 @@ module.exports = function(Devchan) {
     models.Board.allocatePostIndex({name: boardName}, function(err, board) {
       if (err) throw err
 
+      var currentDate = new Date()
       var thread = new models.Thread({
         boardName: board.name,
         initialPostIndex: board.currentPostIndex,
-        lastTimestamp: post.timestamp,
+        lastTimestamp: currentDate,
         posts: []
       })
 
       //delete post._id
       post.index = board.currentPostIndex
-      post.timestamp = new Date()
+      post.timestamp = currentDate
       post.commentHtml = marked(post.commentPlain)
       post.passwordHashed = post.password && post.password.length > 0 ?
         passwordHash.generate(post.password) : ""

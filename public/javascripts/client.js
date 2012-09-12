@@ -184,7 +184,8 @@ var viewModel = {
     var codeLangPattern = /lang-(.+)/
     $(".thread .post pre code").each(function() {
       var $element = $(this)
-      var lang = $element.attr("class").match(codeLangPattern)[1]
+      var elementClass = $element.attr("class") || ""
+      var elementLang = elementClass.match(codeLangPattern)[1]
       var aliases = {
         php: "text/x-php",
         java: "text/x-java",
@@ -192,7 +193,7 @@ var viewModel = {
         sql: "text/x-mysql",
         json: "application/json"
       }
-      lang = aliases[lang] || lang
+      var lang = aliases[elementLang] || elementLang
       CodeMirror.runMode($element.text(), lang, this)
       $element.addClass("cm-s-default")
     })
