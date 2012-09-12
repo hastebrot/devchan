@@ -34,8 +34,9 @@ describe("Routes Thread", function() {
     var url = "localhost:3036/boards/%s/threads"
 
     var board1 = {_id: "board-1", name: "foo", currentPostIndex: 2}
-    var thread1 = {_id: "thread-1", boardName: "foo", initialPostIndex: 1}
-    var thread2 = {_id: "thread-2", boardName: "foo", initialPostIndex: 2}
+    var post1 = {_id: "post-1", sage: false, commentPlain: "This is a **comment**."}
+    var post2 = {_id: "post-2", sage: true, commentPlain: "This is a **comment**."}
+    var thread1 = {_id: "thread-1", boardName: "foo", initialPostIndex: 1, posts: [post1, post2]}
 
     var response1 = null
 
@@ -50,9 +51,6 @@ describe("Routes Thread", function() {
         },
         function(callback) {
           Thread.create(thread1, callback)
-        },
-        function(callback) {
-          Thread.create(thread2, callback)
         }
       ], done)
     })
@@ -76,9 +74,15 @@ describe("Routes Thread", function() {
 
     describe("context webapi data", function() {
       it("should service return docs data", function() {
-        expect(response1.body.docs).to.have.length(2)
+        expect(response1.body.docs).to.have.length(1)
         expect(response1.body.docs[0]).to.contain.key("_id")
         expect(response1.body.docs[0]).to.contain.key("initialPostIndex")
+
+      })
+
+      it("should not send passwords", function() {
+        expect(response1.body.docs[0].posts[0].password).to.be.undefined
+        expect(response1.body.docs[0].posts[0].passwordHashed).to.be.undefined
       })
     })
   })
@@ -265,6 +269,11 @@ describe("Routes Thread", function() {
         expect(response1.body.doc.posts[0]).to.have.property("commentPlain", "This is a **comment**.")
         expect(response1.body.doc.posts[0]).to.have.property("commentHtml",
           "<p>This is a <strong>comment</strong>.</p>\n")
+      })
+
+      it("should not send passwords", function() {
+        expect(response1.body.doc.posts[0].password).to.be.undefined
+        expect(response1.body.doc.posts[0].passwordHashed).to.be.undefined
       })
     })
   })

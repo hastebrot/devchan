@@ -47,9 +47,12 @@ module.exports = function(Devchan) {
       .limit(10).skip((pageIndex - 1) * 10)
       .exec(function(err, threads) {
         if (err) throw err
-        //threads = _.collect(threads, function(thread) {
-        //  return thread.toObject({virtuals: false})
-        //})
+        _.each(threads, function(thread) {
+          _.each(thread.posts, function(post) {
+            post.password = undefined
+            post.passwordHashed = undefined
+          })
+        })
         res.type("application/json").json(200, {docs: threads})
       })
   })
@@ -96,8 +99,12 @@ module.exports = function(Devchan) {
     var boardName = req.params.boardName
     var threadIndex = req.params.threadIndex
 
-    models.Thread.findOne({boardName: boardName, initialPostIndex: threadIndex}).exec(function(err, doc) {
-      res.type("application/json").json(200, {doc: doc})
+    models.Thread.findOne({boardName: boardName, initialPostIndex: threadIndex}).exec(function(err, thread) {
+      _.each(thread.posts, function(post) {
+        post.password = undefined
+        post.passwordHashed = undefined
+      })
+      res.type("application/json").json(200, {doc: thread})
     })
   })
 

@@ -55,6 +55,14 @@ var models = exports = {}
         $("#form-element .post pre code").each(function() {
           var $element = $(this)
           var lang = $element.attr("class").match(codeLangPattern)[1]
+          var aliases = {
+            php: "text/x-php",
+            java: "text/x-java",
+            html: "text/html",
+            sql: "text/x-mysql",
+            json: "application/json"
+          }
+          lang = aliases[lang] || lang
           CodeMirror.runMode($element.text(), lang, this)
           $element.addClass("cm-s-default")
         })
