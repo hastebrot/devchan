@@ -186,7 +186,7 @@ var viewModel = {
       var codeLanguagePattern = /lang-(.+)/
       var codeLanguageClasses = $element.attr("class") || ""
       var codeLanguageClass = codeLanguageClasses.match(codeLanguagePattern) || []
-      var codeLanguage = codeLanguageClass[0] || ""
+      var codeLanguage = codeLanguageClass[1] || ""
       var aliases = {
         php: "text/x-php",
         java: "text/x-java",
