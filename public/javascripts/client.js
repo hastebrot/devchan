@@ -104,12 +104,14 @@ var viewModel = {
     }
   },
   citePost: function(thread, post) {
-    location.hash = "#!/" + thread.boardName() + "/thread-" + thread.initialPostIndex()
+    var hashUrl = "#!/" + thread.boardName() + "/thread-" + thread.initialPostIndex()
+    location.hash = hashUrl
+    hashUrl = hashUrl + "/post-" + post.index()
 
     var text = $("<p/>").html(post.commentHtml()).text()
     text = text.replace(/\s+/g, " ")
     text = text.length > 65 ? text.slice(0, 65).trim() + "..." : text
-    text = "> [>>" + post.index() + "]() " + text + "\n"
+    text = "> [>>" + post.index() + "](" + hashUrl + ") " + text + "\n"
 
     var currentText = viewModel.activePost().commentPlain()
     currentText = currentText.length > 0 ? currentText + "\n" : currentText
