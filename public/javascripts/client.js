@@ -181,11 +181,12 @@ var viewModel = {
       }
     })
 
-    var codeLangPattern = /lang-(.+)/
     $(".thread .post pre code").each(function() {
       var $element = $(this)
-      var elementClass = $element.attr("class") || ""
-      var elementLang = elementClass.match(codeLangPattern)[1]
+      var codeLanguagePattern = /lang-(.+)/
+      var codeLanguageClasses = $element.attr("class") || ""
+      var codeLanguageClass = codeLanguageClasses.match(codeLanguagePattern) || []
+      var codeLanguage = codeLanguageClass[0] || ""
       var aliases = {
         php: "text/x-php",
         java: "text/x-java",
@@ -193,8 +194,8 @@ var viewModel = {
         sql: "text/x-mysql",
         json: "application/json"
       }
-      var lang = aliases[elementLang] || elementLang
-      CodeMirror.runMode($element.text(), lang, this)
+      codeLanguage = aliases[codeLanguage] || codeLanguage
+      CodeMirror.runMode($element.text(), codeLanguage, this)
       $element.addClass("cm-s-default")
     })
 
