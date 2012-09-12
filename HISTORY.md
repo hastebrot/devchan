@@ -1,6 +1,6 @@
 
-0.0.3 / ????
-------------
+0.0.3 / 2012-09-12
+------------------
 
  * Fixed; Replaced `helpers.jsonRequest()` with SuperAgent due to a bug in `JQuery $.ajax()`.
  * Added; Sage and bump functions for posts.
